@@ -13,4 +13,6 @@ add_subdirectory(lib)
 
 add_executable(PicoKeyboard main.cpp)
 
+pico_add_extra_outputs(PicoKeyboard)
+
 target_link_libraries(PicoKeyboard pico_stdlib hardware_spi hardware_pwm LCDLibrary)
