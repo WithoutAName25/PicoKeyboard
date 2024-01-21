@@ -11,8 +11,18 @@ pico_sdk_init()
 
 add_subdirectory(lib)
 
-add_executable(PicoKeyboard main.cpp)
+add_executable(PicoKeyboard main.cpp
+        rgb/rgb.cpp
+        rgb/rgb.h
+        rgb/RGBController.cpp
+        rgb/RGBController.h
+        rotary_encoder/RotaryEncoder.cpp
+        rotary_encoder/RotaryEncoder.h)
+
+pico_enable_stdio_usb(PicoKeyboard 1)
 
 pico_add_extra_outputs(PicoKeyboard)
 
-target_link_libraries(PicoKeyboard pico_stdlib hardware_spi hardware_pwm LCDLibrary)
+target_link_libraries(PicoKeyboard pico_stdlib hardware_pio hardware_pwm LCDLibrary)
+
+add_subdirectory(rgb)

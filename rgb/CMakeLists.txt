@@ -1,0 +1,1 @@
+pico_generate_pio_header(${PROJECT_NAME} ${CMAKE_CURRENT_LIST_DIR}/rgb.pio)
