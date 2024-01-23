@@ -5,10 +5,6 @@
 .define public T2 5
 .define public T3 3
 
-.lang_opt python sideset_init = pico.PIO.OUT_HIGH
-.lang_opt python out_init     = pico.PIO.OUT_HIGH
-.lang_opt python out_shiftdir = 1
-
 .wrap_target
 bitloop:
     out x, 1       side 0 [T3 - 1] ; Side-set still takes place when instruction stalls

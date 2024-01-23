@@ -2,6 +2,7 @@
 #include "rgb/rgb.h"
 #include "rgb/RGBController.h"
 #include "rotary_encoder/RotaryEncoder.h"
+#include "LCDLibrary.h"
 
 uint8_t numKeys = 12;
 uint8_t keyPins[] = {
@@ -39,11 +40,24 @@ int main() {
     initKeys();
     initEncoder();
 
-    rgb_init(pio0, 0, 3);
+    rgb_init(pio0, 3);
     RGBController rgb(12);
 
-    while (true) {
+    SPIInterface *lcd_spi = new PIOSPIInterface(pio1, 10, 9, 11, 12);
+    LCDDirectGraphics lcd(lcd_spi, 13, 14, 52, 40, 135, 240);
 
+    lcd.init();
+    lcd.setBrightness(0);
+    lcd.clear(0x0000);
+
+    uint lastColor = 0;
+    while (true) {
+        for (int i = 0; i < 12; ++i) {
+            bool state = gpio_get(keyPins[i]);
+            rgb.setPixel(i, state ? 0 : colorRGB(0, 0, 255));
+        }
+        rgb.write();
+        sleep_ms(1);
     }
 
     return 0;

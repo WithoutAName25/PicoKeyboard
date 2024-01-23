@@ -23,6 +23,10 @@ public:
     [[nodiscard]] int32_t getRotation() const {
         return rotation;
     }
+
+    void resetRotation() {
+        rotation = 0;
+    }
 };
 
 

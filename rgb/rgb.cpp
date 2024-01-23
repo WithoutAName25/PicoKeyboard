@@ -6,7 +6,8 @@
 PIO currentPio = pio0;
 uint currentSM = 0;
 
-void rgb_init(PIO pio, uint sm, uint pin) {
+void rgb_init(PIO pio, uint pin) {
+    uint sm = pio_claim_unused_sm(pio, true);
     uint offset = pio_add_program(pio, &rgb_program);
 
     pio_gpio_init(pio, pin);
