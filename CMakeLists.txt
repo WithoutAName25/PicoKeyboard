@@ -17,7 +17,9 @@ add_executable(PicoKeyboard main.cpp
         rgb/RGBController.cpp
         rgb/RGBController.h
         rotary_encoder/RotaryEncoder.cpp
-        rotary_encoder/RotaryEncoder.h)
+        rotary_encoder/RotaryEncoder.h
+        keys/KeyManager.cpp
+        keys/KeyManager.h)
 
 pico_enable_stdio_usb(PicoKeyboard 1)
 

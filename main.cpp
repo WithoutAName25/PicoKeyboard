@@ -3,6 +3,7 @@
 #include "rgb/RGBController.h"
 #include "rotary_encoder/RotaryEncoder.h"
 #include "LCDLibrary.h"
+#include "keys/KeyManager.h"
 
 uint8_t numKeys = 12;
 uint8_t keyPins[] = {
@@ -12,16 +13,13 @@ uint8_t keyPins[] = {
         2, 27
 };
 
+KeyManager keys(keyPins, numKeys);
+
 RotaryEncoder enc0(0, 1);
 RotaryEncoder enc1(29, 28);
 
-void initKeys() {
-    for (uint8_t keyPin: keyPins) {
-        gpio_init(keyPin);
-        gpio_set_dir(keyPin, GPIO_IN);
-        gpio_pull_up(keyPin);
-    }
-}
+SPIInterface *lcd_spi = new PIOSPIInterface(pio1, 10, 9, 11, 12);
+LCDDirectGraphics lcd(lcd_spi, 13, 14, 52, 40, 135, 240);
 
 void interrupt_callback(uint gpio, uint32_t events) {
     enc0.callback(gpio);
@@ -37,24 +35,28 @@ void initEncoder() {
 
 int main() {
     stdio_init_all();
-    initKeys();
+    keys.setupPins();
     initEncoder();
 
     rgb_init(pio0, 3);
     RGBController rgb(12);
 
-    SPIInterface *lcd_spi = new PIOSPIInterface(pio1, 10, 9, 11, 12);
-    LCDDirectGraphics lcd(lcd_spi, 13, 14, 52, 40, 135, 240);
-
     lcd.init();
     lcd.setBrightness(0);
     lcd.clear(0x0000);
 
-    uint lastColor = 0;
     while (true) {
+        keys.tick();
         for (int i = 0; i < 12; ++i) {
-            bool state = gpio_get(keyPins[i]);
-            rgb.setPixel(i, state ? 0 : colorRGB(0, 0, 255));
+            int32_t value = 0;
+            if (keys.isActive(i)) {
+                value = 255;
+            } else if (keys.timeInactive(i) > 0) {
+                value = 255 - (keys.timeInactive(i) / 4);
+                if (value < 0) value = 0;
+                if (value > 255) value = 255;
+            }
+            rgb.setPixel(i, value << 8);
         }
         rgb.write();
         sleep_ms(1);
