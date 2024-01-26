@@ -44,10 +44,12 @@ bool KeyManager::isActive(uint8_t key) const {
     return keyStates[key].isActive;
 }
 
-int32_t KeyManager::timeActive(uint8_t key) const {
+uint32_t KeyManager::timeActive(uint8_t key) const {
+    if (currentTick < keyStates[key].activeSinceTick) return -1;
     return currentTick - keyStates[key].activeSinceTick;
 }
 
-int32_t KeyManager::timeInactive(uint8_t key) const {
+uint32_t KeyManager::timeInactive(uint8_t key) const {
+    if (currentTick < keyStates[key].inactiveSinceTick) return -1;
     return currentTick - keyStates[key].inactiveSinceTick;
 }

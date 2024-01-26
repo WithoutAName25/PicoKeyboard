@@ -27,8 +27,8 @@ public:
     void tick();
 
     [[nodiscard]] bool isActive(uint8_t key) const;
-    [[nodiscard]] int32_t timeActive(uint8_t key) const;
-    [[nodiscard]] int32_t timeInactive(uint8_t key) const;
+    [[nodiscard]] uint32_t timeActive(uint8_t key) const;
+    [[nodiscard]] uint32_t timeInactive(uint8_t key) const;
 };
 
 
