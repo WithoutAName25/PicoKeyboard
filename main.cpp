@@ -1,9 +1,12 @@
-#include <stdio.h>
+//#include <stdio.h>
+#include <device/usbd.h>
 #include "rgb/rgb.h"
 #include "rgb/RGBController.h"
 #include "rotary_encoder/RotaryEncoder.h"
 #include "LCDLibrary.h"
 #include "keys/KeyManager.h"
+#include "tusb.h"
+#include "usb/main.h"
 
 uint8_t numKeys = 12;
 uint8_t keyPins[] = {
@@ -34,7 +37,7 @@ void initEncoder() {
 }
 
 int main() {
-    stdio_init_all();
+//    stdio_init_all();
     keys.setupPins();
     initEncoder();
 
@@ -45,7 +48,10 @@ int main() {
     lcd.setBrightness(0);
     lcd.clear(0x0000);
 
+    tusb_init();
+
     while (true) {
+        tud_task();
         keys.tick();
         for (int i = 0; i < 12; ++i) {
             int32_t value = 0;
@@ -60,6 +66,7 @@ int main() {
         }
         rgb.write();
         sleep_ms(1);
+        hid_task(&keys);
     }
 
     return 0;
