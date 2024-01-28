@@ -2,6 +2,7 @@
 #ifndef PICOKEYBOARD_KEYMANAGER_H
 #define PICOKEYBOARD_KEYMANAGER_H
 
+#include <memory>
 #include "pico/stdio.h"
 
 struct KeyState {
@@ -15,12 +16,10 @@ class KeyManager {
 private:
     uint32_t currentTick;
     uint8_t numKeys;
-    KeyState *keyStates;
+    std::unique_ptr<KeyState[]> keyStates;
 
 public:
     explicit KeyManager(uint8_t *keyPins, uint8_t numKeys);
-
-    ~KeyManager();
 
     void setupPins();
 

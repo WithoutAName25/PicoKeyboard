@@ -12,10 +12,6 @@ KeyManager::KeyManager(uint8_t *keyPins, uint8_t numKeys) : currentTick(0), numK
     }
 }
 
-KeyManager::~KeyManager() {
-    delete[] keyStates;
-}
-
 void KeyManager::setupPins() {
     for (int i = 0; i < numKeys; ++i) {
         uint pin = keyStates[i].keyPin;

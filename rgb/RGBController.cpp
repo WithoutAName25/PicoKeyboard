@@ -5,10 +5,6 @@ RGBController::RGBController(uint8_t numPixels)
         : numPixels(numPixels), data(new uint32_t[numPixels]) {
 }
 
-RGBController::~RGBController() {
-    delete[] data;
-}
-
 void RGBController::write() {
     for (int i = 0; i < numPixels; ++i) {
         rgb_put_pixel(data[i]);
