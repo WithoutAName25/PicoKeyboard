@@ -1,8 +1,5 @@
 #include "main.h"
-
-#include "bsp/board.h"
 #include "tusb.h"
-
 #include "usb_descriptors.h"
 
 // Invoked when device is mounted
@@ -39,7 +36,8 @@ static void send_hid_report(uint8_t report_id, uint32_t btn) {
 
             if (btn) {
                 uint8_t keycode[6] = {0};
-                keycode[0] = HID_KEY_A;
+                keycode[0] = HID_KEY_SHIFT_LEFT;
+                keycode[1] = HID_KEY_A;
 
                 tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, keycode);
                 has_keyboard_key = true;
@@ -117,7 +115,7 @@ void hid_task(struct KeyManager *keys) {
     const uint32_t interval_ms = 10;
     static uint32_t start_ms = 0;
 
-    if (board_millis() - start_ms < interval_ms) return; // not enough time
+    if ((time_us_64() >> 10) - start_ms < interval_ms) return; // not enough time
     start_ms += interval_ms;
 
     uint32_t const btn = keys->isActive(0);
@@ -176,7 +174,8 @@ void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_
 
             uint8_t const kbd_leds = buffer[0];
             bool caps_lock = kbd_leds & KEYBOARD_LED_CAPSLOCK;
-            // TODO show caps_lock
+            (void) caps_lock;
+            // TODO show caps_lock and other leds
         }
     }
 }

@@ -21,15 +21,15 @@ add_executable(PicoKeyboard main.cpp
         keys/KeyManager.cpp
         keys/KeyManager.h
         usb/main.cpp
-        tusb_config.h
+        usb/tusb_config.h
         usb/usb_descriptors.cpp
         usb/usb_descriptors.h
         usb/main.h)
 
-#pico_enable_stdio_usb(PicoKeyboard 1)
-
 pico_add_extra_outputs(PicoKeyboard)
 
 target_link_libraries(PicoKeyboard pico_stdlib hardware_pio hardware_pwm LCDLibrary pico_unique_id tinyusb_device tinyusb_board)
+
+target_include_directories(PicoKeyboard PUBLIC usb)
 
 add_subdirectory(rgb)
