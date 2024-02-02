@@ -24,7 +24,9 @@ add_executable(PicoKeyboard main.cpp
         usb/tusb_config.h
         usb/usb_descriptors.cpp
         usb/usb_descriptors.h
-        usb/main.h)
+        usb/main.h
+        keys/KeyLayerManager.cpp
+        keys/KeyLayerManager.h)
 
 pico_add_extra_outputs(PicoKeyboard)
 

@@ -1,4 +1,3 @@
-#include <cstdio>
 #include "rgb.h"
 #include "rgb.pio.h"
 #include "hardware/clocks.h"

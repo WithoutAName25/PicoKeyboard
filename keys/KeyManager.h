@@ -1,4 +1,3 @@
-
 #ifndef PICOKEYBOARD_KEYMANAGER_H
 #define PICOKEYBOARD_KEYMANAGER_H
 
@@ -26,8 +25,12 @@ public:
     void tick();
 
     [[nodiscard]] bool isActive(uint8_t key) const;
+
     [[nodiscard]] uint32_t timeActive(uint8_t key) const;
+
     [[nodiscard]] uint32_t timeInactive(uint8_t key) const;
+
+    [[nodiscard]] uint8_t getNumKeys() const;
 };
 
 

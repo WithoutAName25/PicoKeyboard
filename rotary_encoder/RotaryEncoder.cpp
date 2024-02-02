@@ -1,4 +1,3 @@
-
 #include "RotaryEncoder.h"
 
 void RotaryEncoder::init() const {

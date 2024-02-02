@@ -1,4 +1,3 @@
-
 #ifndef PICOKEYBOARD_ROTARYENCODER_H
 #define PICOKEYBOARD_ROTARYENCODER_H
 
@@ -22,10 +21,6 @@ public:
 
     [[nodiscard]] int32_t getRotation() const {
         return rotation;
-    }
-
-    void resetRotation() {
-        rotation = 0;
     }
 };
 

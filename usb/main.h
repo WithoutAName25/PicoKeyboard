@@ -1,8 +1,8 @@
 #ifndef PICOKEYBOARD_MAIN_H
 #define PICOKEYBOARD_MAIN_H
 
-#include "../keys/KeyManager.h"
+#include "../keys/KeyLayerManager.h"
 
-void hid_task(KeyManager *);
+void hid_task(KeyLayerManager *);
 
 #endif //PICOKEYBOARD_MAIN_H
