@@ -6,38 +6,52 @@
 #include "KeyManager.h"
 
 #define NO_KEY 255
-enum KeyActionType {
+enum KeyActionType : uint8_t {
     NO_ACTION,
     KEY_PRESS,
+    SWITCH_MODE,
+    CUSTOM,
     ROOT_LAYER_SWITCH,
     ENABLE_OVERLAY_LAYER,
     PREVIOUS_LAYER_ACTION,
 };
 
+enum Mode : uint8_t {
+    MODE_DEFAULT,
+    MODE_PONG
+};
+
 struct KeyAction {
-    KeyActionType type = NO_ACTION;
+    KeyActionType type = PREVIOUS_LAYER_ACTION;
     uint8_t data = 0;
 };
 
 struct LayerStack {
     KeyAction *current;
-    uint8_t activatedByKey = NO_KEY;
+    uint8_t wasActivatedByKey = NO_KEY;
     std::unique_ptr<LayerStack> previous;
+};
+
+struct LayerConfig {
+    uint8_t id;
+    KeyAction *actions;
 };
 
 class KeyLayerManager {
 private:
-public:
     KeyManager *keys;
     std::vector<std::unique_ptr<KeyAction[]>> layers;
     std::unique_ptr<LayerStack> currentLayer;
+    uint8_t currentRootLayerID;
     std::vector<uint8_t> pressedKeys;
+    std::vector<uint8_t> customActions;
+    Mode mode = MODE_DEFAULT;
 
     void pushLayer(uint8_t layerID, uint8_t activatedByKey);
 
     void popLayer();
 
-    KeyAction *getAction(uint8_t pressedKey);
+    [[nodiscard]] KeyAction *getAction(uint8_t pressedKey) const;
 
     void tickCurrentLayer();
 
@@ -45,15 +59,17 @@ public:
 
 public:
     // Constructor implementation
-    explicit KeyLayerManager(KeyManager *keyMgr) : keys(keyMgr) {}
+    explicit KeyLayerManager(KeyManager *keyMgr) : keys(keyMgr), currentRootLayerID(255) {}
 
-    uint8_t addLayer(std::unique_ptr<KeyAction[]> layer);
+    LayerConfig addLayer();
 
     void setRootLayer(uint8_t layerID);
 
     void tick();
 
-    std::vector<uint8_t> getPressedKeys();
+    [[nodiscard]] Mode getMode() const;
+
+    [[nodiscard]] std::vector<uint8_t> getPressedKeys() const;
 };
 
 #endif //PICOKEYBOARD_KEYLAYERMANAGER_H

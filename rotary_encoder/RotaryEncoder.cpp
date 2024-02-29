@@ -14,11 +14,11 @@ void RotaryEncoder::callback(uint gpio) {
         if (gpio == pinA) {
             bool stateB = gpio_get(pinB);
             if (state == stateB) {
-                if (rotation < 255)
-                    rotation++;
+//                if (rotation < 255)
+                rotation++;
             } else {
-                if (rotation > 0)
-                    rotation--;
+//                if (rotation > 0)
+                rotation--;
             }
             lastChange = false;
             state = stateB;
@@ -27,11 +27,11 @@ void RotaryEncoder::callback(uint gpio) {
         if (gpio == pinB) {
             bool stateA = gpio_get(pinA);
             if (state == stateA) {
-                if (rotation > 0)
-                    rotation--;
+//                if (rotation > 0)
+                rotation--;
             } else {
-                if (rotation < 255)
-                    rotation++;
+//                if (rotation < 255)
+                rotation++;
             }
             lastChange = true;
             state = stateA;

@@ -26,7 +26,10 @@ add_executable(PicoKeyboard main.cpp
         usb/usb_descriptors.h
         usb/main.h
         keys/KeyLayerManager.cpp
-        keys/KeyLayerManager.h)
+        keys/KeyLayerManager.h
+        games/pong/PongGame.cpp
+        games/pong/PongGame.h
+)
 
 pico_add_extra_outputs(PicoKeyboard)
 
