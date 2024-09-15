@@ -27,6 +27,8 @@ add_executable(PicoKeyboard main.cpp
         games/pong/PongGame.h
         keys/KeyStateManager.cpp
         keys/KeyStateManager.h
+        util/Scheduler.cpp
+        util/Scheduler.h
 )
 
 pico_add_extra_outputs(PicoKeyboard)
