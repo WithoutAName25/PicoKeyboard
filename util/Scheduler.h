@@ -11,9 +11,11 @@ class Scheduler {
 private:
     std::unique_ptr<std::priority_queue<Task, std::vector<Task>, CompareTask>> queue;
 public:
-    void addTask(std::function<void()> *task, uint64_t executionTime);
+    Scheduler();
 
-    void addPeriodicTask(std::function<void()> *task, uint64_t firstExecutionTime, uint64_t period);
+    void addTask(std::function<void(uint64_t)> *task, uint64_t executionTime);
+
+    void addPeriodicTask(std::function<void(uint64_t)> *task, uint64_t firstExecutionTime, uint64_t period);
 
     void tick(uint64_t timestamp);
 };
