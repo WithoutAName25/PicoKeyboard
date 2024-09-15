@@ -25,50 +25,50 @@ void tud_resume_cb(void) {
 // USB HID
 //--------------------------------------------------------------------+
 
-static void sendKeyboardReport(KeyLayerManager *keys) {
-    // skip if hid is not ready yet
-    if (!tud_hid_ready()) return;
-
-    // use to avoid send multiple consecutive zero report for keyboard
-    static bool has_keyboard_key = false;
-
-    const std::vector<uint8_t> &pressedKeys = keys->getPressedKeys();
-    if (!pressedKeys.empty()) {
-        uint8_t keycode[6] = {0};
-        for (int i = 0; i < 6 && i < pressedKeys.size(); ++i) {
-            keycode[i] = pressedKeys[i];
-        }
-
-        tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, keycode);
-        has_keyboard_key = true;
-    } else {
-        // send empty key report if previously has key pressed
-        if (has_keyboard_key) tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, NULL);
-        has_keyboard_key = false;
-    }
-}
+//static void sendKeyboardReport(KeyLayerManager *keys) {
+//    // skip if hid is not ready yet
+//    if (!tud_hid_ready()) return;
+//
+//    // use to avoid send multiple consecutive zero report for keyboard
+//    static bool has_keyboard_key = false;
+//
+//    const std::vector<uint8_t> &pressedKeys = keys->getPressedKeys();
+//    if (!pressedKeys.empty()) {
+//        uint8_t keycode[6] = {0};
+//        for (int i = 0; i < 6 && i < pressedKeys.size(); ++i) {
+//            keycode[i] = pressedKeys[i];
+//        }
+//
+//        tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, keycode);
+//        has_keyboard_key = true;
+//    } else {
+//        // send empty key report if previously has key pressed
+//        if (has_keyboard_key) tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, NULL);
+//        has_keyboard_key = false;
+//    }
+//}
 
 // Every 10ms, we will sent 1 report for each HID profile (keyboard, mouse etc ..)
 // tud_hid_report_complete_cb() is used to send the next report after previous one is complete
-void hid_task(KeyLayerManager *keys) {
-    // Poll every 10ms
-    const uint32_t interval_ms = 10;
-    static uint32_t start_ms = 0;
-
-    if ((time_us_64() >> 10) - start_ms < interval_ms) return; // not enough time
-    start_ms += interval_ms;
-
-    size_t numPressedKeys = keys->getPressedKeys().size();
-
-    // Remote wakeup
-    if (tud_suspended() && numPressedKeys) {
-        // Wake up host if we are in suspend mode
-        // and REMOTE_WAKEUP feature is enabled by host
-        tud_remote_wakeup();
-    } else {
-        // Send the 1st of report chain, the rest will be sent by tud_hid_report_complete_cb()
-        sendKeyboardReport(keys);
-    }
+void hid_task() {
+//    // Poll every 10ms
+//    const uint32_t interval_ms = 10;
+//    static uint32_t start_ms = 0;
+//
+//    if ((time_us_64() >> 10) - start_ms < interval_ms) return; // not enough time
+//    start_ms += interval_ms;
+//
+//    size_t numPressedKeys = keys->getPressedKeys().size();
+//
+//    // Remote wakeup
+//    if (tud_suspended() && numPressedKeys) {
+//        // Wake up host if we are in suspend mode
+//        // and REMOTE_WAKEUP feature is enabled by host
+//        tud_remote_wakeup();
+//    } else {
+//        // Send the 1st of report chain, the rest will be sent by tud_hid_report_complete_cb()
+//        sendKeyboardReport(keys);
+//    }
 }
 
 // Invoked when sent REPORT successfully to host

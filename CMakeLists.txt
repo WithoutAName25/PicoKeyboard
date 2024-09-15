@@ -18,17 +18,15 @@ add_executable(PicoKeyboard main.cpp
         rgb/RGBController.h
         rotary_encoder/RotaryEncoder.cpp
         rotary_encoder/RotaryEncoder.h
-        keys/KeyManager.cpp
-        keys/KeyManager.h
         usb/main.cpp
         usb/tusb_config.h
         usb/usb_descriptors.cpp
         usb/usb_descriptors.h
         usb/main.h
-        keys/KeyLayerManager.cpp
-        keys/KeyLayerManager.h
         games/pong/PongGame.cpp
         games/pong/PongGame.h
+        keys/KeyStateManager.cpp
+        keys/KeyStateManager.h
 )
 
 pico_add_extra_outputs(PicoKeyboard)
