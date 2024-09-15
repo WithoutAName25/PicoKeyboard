@@ -2,6 +2,7 @@
 #define PICOKEYBOARD_KEYSTATEMANAGER_H
 
 #include <memory>
+#include <functional>
 #include "pico/stdlib.h"
 
 struct KeyState {
@@ -11,12 +12,15 @@ struct KeyState {
     uint32_t totalPressCount = 0;
 };
 
+typedef std::function<void(uint8_t, KeyState *, uint32_t)> KeyStateListener;
+
 class KeyStateManager {
 private:
     uint8_t numKeys;
     std::unique_ptr<KeyState[]> keyStates;
+    KeyStateListener *onStateChange;
 public:
-    KeyStateManager(uint8_t numKeys);
+    KeyStateManager(uint8_t numKeys, KeyStateListener *onStateChange);
 
     void updateKeyState(uint8_t keyIndex, bool isPressed, uint32_t timestamp);
 

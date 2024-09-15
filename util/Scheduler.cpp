@@ -1,6 +1,6 @@
 #include "Scheduler.h"
 
-Scheduler::Scheduler() : queue(std::make_unique<std::priority_queue<Task, std::vector<Task>, CompareTask>>()) {}
+Scheduler::Scheduler() : queue(std::make_unique<PriorityQueue>()) {}
 
 void Scheduler::addTask(std::function<void(uint64_t)> *task, uint64_t executionTime) {
     queue->push(Task(task, executionTime));

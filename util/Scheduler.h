@@ -9,7 +9,9 @@
 
 class Scheduler {
 private:
-    std::unique_ptr<std::priority_queue<Task, std::vector<Task>, CompareTask>> queue;
+    using PriorityQueue = std::priority_queue<Task, std::vector<Task>, CompareTask>;
+
+    std::unique_ptr<PriorityQueue> queue;
 public:
     Scheduler();
 
