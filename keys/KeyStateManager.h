@@ -22,9 +22,9 @@ private:
 public:
     KeyStateManager(uint8_t numKeys, KeyStateListener *onStateChange);
 
-    void updateKeyState(uint8_t keyIndex, bool isPressed, uint32_t timestamp);
+    void updateKeyState(uint8_t keyId, bool isPressed, uint32_t timestamp);
 
-    KeyState *getKeyState(uint8_t keyIndex);
+    KeyState *getKeyState(uint8_t keyId);
 };
 
 
