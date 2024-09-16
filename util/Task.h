@@ -5,16 +5,16 @@
 #include <functional>
 
 struct Task {
-    std::function<void(uint64_t)> *task;
+    std::function<void(absolute_time_t)> *task;
 
-    uint64_t nextExecutionTime;
+    absolute_time_t nextExecutionTime;
 
     uint64_t period; // 0 means no periodic execution
 
-    Task(std::function<void(uint64_t)> *task, uint64_t executionTime)
+    Task(std::function<void(absolute_time_t)> *task, absolute_time_t executionTime)
             : task(task), nextExecutionTime(executionTime), period(0) {}
 
-    Task(std::function<void(uint64_t)> *task, uint64_t executionTime, uint64_t period)
+    Task(std::function<void(absolute_time_t)> *task, absolute_time_t executionTime, uint64_t period)
             : task(task), nextExecutionTime(executionTime), period(period) {}
 
     [[nodiscard]] bool isPeriodic() const {

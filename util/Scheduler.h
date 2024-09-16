@@ -15,11 +15,12 @@ private:
 public:
     Scheduler();
 
-    void addTask(std::function<void(uint64_t)> *task, uint64_t executionTime);
+    void addTask(std::function<void(absolute_time_t)> *task, absolute_time_t executionTime);
 
-    void addPeriodicTask(std::function<void(uint64_t)> *task, uint64_t firstExecutionTime, uint64_t period);
+    void
+    addPeriodicTask(std::function<void(absolute_time_t)> *task, absolute_time_t firstExecutionTime, uint64_t period);
 
-    void tick(uint64_t timestamp);
+    void run();
 };
 
 
