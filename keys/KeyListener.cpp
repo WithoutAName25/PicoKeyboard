@@ -13,7 +13,7 @@ void KeyListener::setupPins() {
     }
 }
 
-void KeyListener::tick(absolute_time_t timestamp) {
+void KeyListener::execute(absolute_time_t timestamp) {
     for (int i = 0; i < numKeys; ++i) {
         HWKeyConfig &key = keys[i];
         bool isPressed = !gpio_get(key.pin);

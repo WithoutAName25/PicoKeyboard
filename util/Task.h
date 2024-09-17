@@ -2,20 +2,21 @@
 #define PICOKEYBOARD_TASK_H
 
 #include "pico/stdlib.h"
+#include "IExecutable.h"
 #include <functional>
 
 struct Task {
-    std::function<void(absolute_time_t)> *task;
+    IExecutable *executable;
 
     absolute_time_t nextExecutionTime;
 
     uint64_t period; // 0 means no periodic execution
 
-    Task(std::function<void(absolute_time_t)> *task, absolute_time_t executionTime)
-            : task(task), nextExecutionTime(executionTime), period(0) {}
+    Task(IExecutable *executable, absolute_time_t executionTime)
+            : executable(executable), nextExecutionTime(executionTime), period(0) {}
 
-    Task(std::function<void(absolute_time_t)> *task, absolute_time_t executionTime, uint64_t period)
-            : task(task), nextExecutionTime(executionTime), period(period) {}
+    Task(IExecutable *executable, absolute_time_t executionTime, uint64_t period)
+            : executable(executable), nextExecutionTime(executionTime), period(period) {}
 
     [[nodiscard]] bool isPeriodic() const {
         return period > 0;

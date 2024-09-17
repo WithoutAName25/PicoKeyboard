@@ -31,6 +31,15 @@ add_executable(PicoKeyboard main.cpp
         util/Scheduler.h
         keys/KeyListener.cpp
         keys/KeyListener.h
+        keys/KeyboardController.cpp
+        keys/KeyboardController.h
+        keys/action/IKeyAction.h
+        keys/KeyLayer.cpp
+        keys/KeyLayer.h
+        keys/KeyOverlayLayer.h
+        GlobalManagers.h
+        GlobalManagers.cpp
+        util/IExecutable.h
 )
 
 pico_add_extra_outputs(PicoKeyboard)

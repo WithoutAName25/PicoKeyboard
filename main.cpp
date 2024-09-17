@@ -4,7 +4,6 @@
 #include "rgb/RGBController.h"
 #include "rotary_encoder/RotaryEncoder.h"
 #include "LCDLibrary.h"
-#include "keys/KeyStateManager.h"
 #include "tusb.h"
 #include "usb/main.h"
 #include "games/pong/PongGame.h"
@@ -16,8 +15,6 @@ uint8_t keyPins[] = {
         5, 18, 21, 24,
         6, 19, 22, 25
 };
-
-KeyStateManager keys(numKeys);
 
 RotaryEncoder enc0(0, 1);
 RotaryEncoder enc1(29, 28);
@@ -46,9 +43,9 @@ int main() {
     initEncoder();
 
     rgb_init(pio0, 3);
-    RGBController rgb(12);
+    RGBController rgb(24);
 
-    rgb.setAll(255 << 8);
+    rgb.setAll(0);
     rgb.write();
 
     lcd.init();
@@ -68,6 +65,10 @@ int main() {
         tud_task();
 //        hid_task(&layers);
 
+        for (int i = 0; i < 12; ++i) {
+            rgb.setPixel(i, colorHSV(((24 - i) * 10 + (time >> 15)) % 360, 1, 1));
+        }
+        rgb.write();
 
         uint64_t timeUsed = time_us_64() - time;
         if (timeUsed < 1000) {
