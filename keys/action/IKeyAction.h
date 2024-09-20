@@ -3,7 +3,7 @@
 #define PICOKEYBOARD_IKEYACTION_H
 
 #include "pico/stdlib.h"
-#include "../KeyStateManager.h"
+#include "../KeyStateController.h"
 
 class IKeyAction {
 public:

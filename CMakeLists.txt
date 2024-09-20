@@ -25,21 +25,27 @@ add_executable(PicoKeyboard main.cpp
         usb/main.h
         games/pong/PongGame.cpp
         games/pong/PongGame.h
-        keys/KeyStateManager.cpp
-        keys/KeyStateManager.h
+        keys/KeyStateController.cpp
+        keys/KeyStateController.h
         util/Scheduler.cpp
         util/Scheduler.h
         keys/KeyListener.cpp
         keys/KeyListener.h
-        keys/KeyboardController.cpp
-        keys/KeyboardController.h
+        keys/KeyActionController.cpp
+        keys/KeyActionController.h
         keys/action/IKeyAction.h
         keys/KeyLayer.cpp
         keys/KeyLayer.h
         keys/KeyOverlayLayer.h
-        GlobalManagers.h
-        GlobalManagers.cpp
         util/IExecutable.h
+        keys/KeyboardController.cpp
+        keys/KeyboardController.h
+        rgb/effect/IRgbEffect.h
+        rgb/effect/StaticRgbEffect.cpp
+        rgb/effect/StaticRgbEffect.h
+        rgb/effect/RainbowEffect.cpp
+        rgb/effect/RainbowEffect.h
+        main.h
 )
 
 pico_add_extra_outputs(PicoKeyboard)

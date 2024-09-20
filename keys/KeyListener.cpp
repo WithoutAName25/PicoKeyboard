@@ -1,7 +1,7 @@
 
 #include "KeyListener.h"
 
-KeyListener::KeyListener(KeyStateManager *manager, std::unique_ptr<HWKeyConfig[]> keys, uint8_t numKeys)
+KeyListener::KeyListener(KeyStateController *manager, std::unique_ptr<HWKeyConfig[]> keys, uint8_t numKeys)
         : manager(manager), keys(std::move(keys)), numKeys(numKeys) {}
 
 void KeyListener::setupPins() {

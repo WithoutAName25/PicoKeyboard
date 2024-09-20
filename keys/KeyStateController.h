@@ -1,5 +1,5 @@
-#ifndef PICOKEYBOARD_KEYSTATEMANAGER_H
-#define PICOKEYBOARD_KEYSTATEMANAGER_H
+#ifndef PICOKEYBOARD_KEYSTATECONTROLLER_H
+#define PICOKEYBOARD_KEYSTATECONTROLLER_H
 
 #include <memory>
 #include <functional>
@@ -32,13 +32,13 @@ public:
 
 using KeyStateListenerReference = std::pair<ListenerPriority, std::list<IKeyStateListener *>::iterator>;
 
-class KeyStateManager {
+class KeyStateController {
 private:
     uint8_t numKeys;
     std::unique_ptr<KeyState[]> keyStates;
     std::array<std::list<IKeyStateListener *>, static_cast<size_t>(ListenerPriority::Count)> listeners;
 public:
-    explicit KeyStateManager(uint8_t numKeys);
+    explicit KeyStateController(uint8_t numKeys);
 
     void updateKeyState(uint8_t keyId, bool isPressed, absolute_time_t timestamp);
 
@@ -50,4 +50,4 @@ public:
 };
 
 
-#endif //PICOKEYBOARD_KEYSTATEMANAGER_H
+#endif //PICOKEYBOARD_KEYSTATECONTROLLER_H

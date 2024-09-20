@@ -1,7 +1,7 @@
-#include "KeyboardController.h"
-#include "../GlobalManagers.h"
+#include "KeyActionController.h"
+#include "../main.h"
 
-IKeyAction *KeyboardController::getAction(uint8_t keyId, absolute_time_t timestamp) {
+IKeyAction *KeyActionController::getAction(uint8_t keyId, absolute_time_t timestamp) {
     KeyOverlayLayer *last = nullptr;
     for (KeyOverlayLayer *layer = overlayLayerStack.get(); layer != nullptr; layer = layer->next.get()) {
         if (!isValid(layer, timestamp)) {
@@ -21,7 +21,7 @@ IKeyAction *KeyboardController::getAction(uint8_t keyId, absolute_time_t timesta
     return currentBaseLayer->getAction(keyId);
 }
 
-void KeyboardController::removeOverlayLayer(KeyOverlayLayer *last, KeyOverlayLayer *layer) {
+void KeyActionController::removeOverlayLayer(KeyOverlayLayer *last, KeyOverlayLayer *layer) {
     if (last != nullptr) {
         last->next = std::move(layer->next);
     } else {
@@ -29,10 +29,10 @@ void KeyboardController::removeOverlayLayer(KeyOverlayLayer *last, KeyOverlayLay
     }
 }
 
-bool KeyboardController::isValid(KeyOverlayLayer *overlayLayer, absolute_time_t timestamp) {
+bool KeyActionController::isValid(KeyOverlayLayer *overlayLayer, absolute_time_t timestamp) {
     switch (overlayLayer->lifetimeType) {
         case WHILE_HELD: {
-            KeyState &state = getKeyStateManager().getKeyState(overlayLayer->activatedByKeyId);
+            KeyState &state = keyStateController.getKeyState(overlayLayer->activatedByKeyId);
             return state.isPressed && state.pressTime <= overlayLayer->activationTime;
         }
         case SINGLE_USE:
@@ -43,7 +43,7 @@ bool KeyboardController::isValid(KeyOverlayLayer *overlayLayer, absolute_time_t 
     return false;
 }
 
-KeyboardController::KeyboardController(uint8_t numKeys, KeyStateManager manager)
+KeyActionController::KeyActionController(uint8_t numKeys, KeyStateController manager)
         : layers(),
           numLayers(0),
           numKeys(numKeys),
@@ -52,17 +52,17 @@ KeyboardController::KeyboardController(uint8_t numKeys, KeyStateManager manager)
     manager.addKeyStateListener(this);
 }
 
-KeyLayer &KeyboardController::addLayer() {
+KeyLayer &KeyActionController::addLayer() {
     layers.emplace_back(layers.size(), numKeys);
     return layers.back();
 }
 
-void KeyboardController::switchBaseLayer(uint16_t layerId) {
+void KeyActionController::switchBaseLayer(uint16_t layerId) {
     currentBaseLayer = &layers[layerId];
     overlayLayerStack = nullptr;
 }
 
-void KeyboardController::addOverlayLayer(uint16_t layerId, uint8_t activatedByKeyId, absolute_time_t timestamp) {
+void KeyActionController::addOverlayLayer(uint16_t layerId, uint8_t activatedByKeyId, absolute_time_t timestamp) {
     overlayLayerStack = std::make_unique<KeyOverlayLayer>(KeyOverlayLayer{
             &layers[layerId],
             WHILE_HELD,
@@ -73,7 +73,7 @@ void KeyboardController::addOverlayLayer(uint16_t layerId, uint8_t activatedByKe
     });
 }
 
-void KeyboardController::addSingleUseOverlayLayer(uint16_t layerId, absolute_time_t timestamp) {
+void KeyActionController::addSingleUseOverlayLayer(uint16_t layerId, absolute_time_t timestamp) {
     overlayLayerStack = std::make_unique<KeyOverlayLayer>(KeyOverlayLayer{
             &layers[layerId],
             SINGLE_USE,
@@ -84,8 +84,8 @@ void KeyboardController::addSingleUseOverlayLayer(uint16_t layerId, absolute_tim
     });
 }
 
-void KeyboardController::addExpiringOverlayLayer(uint16_t layerId, absolute_time_t timestamp,
-                                                 absolute_time_t expirationTime) {
+void KeyActionController::addExpiringOverlayLayer(uint16_t layerId, absolute_time_t timestamp,
+                                                  absolute_time_t expirationTime) {
     overlayLayerStack = std::make_unique<KeyOverlayLayer>(KeyOverlayLayer{
             &layers[layerId],
             EXPIRING,
@@ -96,11 +96,11 @@ void KeyboardController::addExpiringOverlayLayer(uint16_t layerId, absolute_time
     });
 }
 
-ListenerPriority KeyboardController::getPriority() const {
+ListenerPriority KeyActionController::getPriority() const {
     return ListenerPriority::WITH_KEYBOARD_CONTROLLER;
 }
 
-void KeyboardController::onKeyStateChange(uint8_t keyId, KeyState &state, absolute_time_t timestamp) {
+void KeyActionController::onKeyStateChange(uint8_t keyId, KeyState &state, absolute_time_t timestamp) {
     IKeyAction *action = getAction(keyId, timestamp);
     if (action != nullptr) {
         action->execute(keyId, &state, timestamp);

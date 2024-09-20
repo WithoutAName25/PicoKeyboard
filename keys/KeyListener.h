@@ -3,7 +3,7 @@
 
 #include <memory>
 #include "pico/stdlib.h"
-#include "KeyStateManager.h"
+#include "KeyStateController.h"
 #include "../util/IExecutable.h"
 
 struct HWKeyConfig {
@@ -13,12 +13,12 @@ struct HWKeyConfig {
 
 class KeyListener : public IExecutable {
 private:
-    KeyStateManager *manager;
+    KeyStateController *manager;
     std::unique_ptr<HWKeyConfig[]> keys;
     uint8_t numKeys;
 
 public:
-    KeyListener(KeyStateManager *manager, std::unique_ptr<HWKeyConfig[]> keys, uint8_t numKeys);
+    KeyListener(KeyStateController *manager, std::unique_ptr<HWKeyConfig[]> keys, uint8_t numKeys);
 
     void setupPins();
 

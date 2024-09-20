@@ -1,11 +1,11 @@
-#ifndef PICOKEYBOARD_KEYBOARDCONTROLLER_H
-#define PICOKEYBOARD_KEYBOARDCONTROLLER_H
+#ifndef PICOKEYBOARD_KEYACTIONCONTROLLER_H
+#define PICOKEYBOARD_KEYACTIONCONTROLLER_H
 
 #include <memory>
 #include "KeyLayer.h"
 #include "KeyOverlayLayer.h"
 
-class KeyboardController : IKeyStateListener {
+class KeyActionController : IKeyStateListener {
 private:
     std::vector<KeyLayer> layers;
     uint16_t numLayers;
@@ -20,7 +20,7 @@ private:
     static bool isValid(KeyOverlayLayer *overlayLayer, absolute_time_t timestamp);
 
 public:
-    KeyboardController(uint8_t numKeys, KeyStateManager manager);
+    KeyActionController(uint8_t numKeys, KeyStateController manager);
 
     KeyLayer &addLayer();
 
@@ -37,4 +37,4 @@ public:
     void onKeyStateChange(uint8_t keyId, KeyState &state, absolute_time_t timestamp) override;
 };
 
-#endif //PICOKEYBOARD_KEYBOARDCONTROLLER_H
+#endif //PICOKEYBOARD_KEYACTIONCONTROLLER_H

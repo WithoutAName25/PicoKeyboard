@@ -7,15 +7,15 @@
 
 class Scheduler {
 private:
-    using PriorityQueue = std::priority_queue<Task, std::vector<Task>, CompareTask>;
+    using PriorityQueue = std::priority_queue<Task *, std::vector<Task *>, CompareTask>;
 
     std::unique_ptr<PriorityQueue> queue;
 public:
     Scheduler();
 
-    void addTask(IExecutable *executable, absolute_time_t executionTime);
+    Task *addTask(IExecutable *executable, absolute_time_t executionTime);
 
-    void addPeriodicTask(IExecutable *executable, absolute_time_t firstExecutionTime, uint64_t period);
+    Task *addPeriodicTask(IExecutable *executable, absolute_time_t firstExecutionTime, uint64_t period);
 
     void run();
 };
