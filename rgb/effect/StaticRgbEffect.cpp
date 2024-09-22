@@ -4,7 +4,6 @@ StaticRgbEffect::StaticRgbEffect(uint32_t colorGRBW) {
     color = colorGRBW;
 }
 
-void StaticRgbEffect::start(RGBController &controller) {
-    controller.setAll(color);
-    controller.write();
+uint32_t StaticRgbEffect::getColor(LedConfig &led, absolute_time_t timestamp) {
+    return color;
 }

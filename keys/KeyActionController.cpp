@@ -18,6 +18,7 @@ IKeyAction *KeyActionController::getAction(uint8_t keyId, absolute_time_t timest
         }
         last = layer;
     }
+    if (currentBaseLayer == nullptr) return nullptr;
     return currentBaseLayer->getAction(keyId);
 }
 
@@ -43,13 +44,13 @@ bool KeyActionController::isValid(KeyOverlayLayer *overlayLayer, absolute_time_t
     return false;
 }
 
-KeyActionController::KeyActionController(uint8_t numKeys, KeyStateController manager)
+KeyActionController::KeyActionController(uint8_t numKeys, KeyStateController &stateController)
         : layers(),
           numLayers(0),
           numKeys(numKeys),
           currentBaseLayer(nullptr),
           overlayLayerStack(nullptr) {
-    manager.addKeyStateListener(this);
+    stateController.addKeyStateListener(this);
 }
 
 KeyLayer &KeyActionController::addLayer() {

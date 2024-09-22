@@ -4,23 +4,23 @@
 #include <memory>
 #include "pico/stdlib.h"
 #include "effect/IRgbEffect.h"
+#include "../util/Scheduler.h"
 
-class IRgbEffect;
-
-class RGBController {
+class RgbController : IExecutable {
 private:
-    uint8_t numPixels;
+    LedConfig *ledConfigs;
+    uint8_t numLEDs;
     std::unique_ptr<uint32_t[]> data;
     std::unique_ptr<IRgbEffect> currentEffect;
 
-public:
-    explicit RGBController(uint8_t numPixels);
+    void setPixel(uint8_t hwNumber, uint32_t colorGRBW);
 
     void write();
 
-    void setPixel(uint8_t index, uint32_t colorGRBW);
+    void execute(absolute_time_t timestamp) override;
 
-    void setAll(uint32_t colorGRBW);
+public:
+    explicit RgbController(Scheduler &scheduler, LedConfig *ledConfigs, uint8_t numLEDs);
 
     void setEffect(std::unique_ptr<IRgbEffect> effect);
 };

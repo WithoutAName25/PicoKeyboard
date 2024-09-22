@@ -1,8 +1,10 @@
 
 #include "KeyListener.h"
 
-KeyListener::KeyListener(KeyStateController *manager, std::unique_ptr<HWKeyConfig[]> keys, uint8_t numKeys)
-        : manager(manager), keys(std::move(keys)), numKeys(numKeys) {}
+KeyListener::KeyListener(Scheduler &scheduler, KeyStateController &controller, HWKeyConfig *keys, uint8_t numKeys)
+        : controller(controller), keys(keys), numKeys(numKeys) {
+    scheduler.addPeriodicTask(this, get_absolute_time(), 500);
+}
 
 void KeyListener::setupPins() {
     for (int i = 0; i < numKeys; ++i) {
@@ -17,6 +19,6 @@ void KeyListener::execute(absolute_time_t timestamp) {
     for (int i = 0; i < numKeys; ++i) {
         HWKeyConfig &key = keys[i];
         bool isPressed = !gpio_get(key.pin);
-        manager->updateKeyState(key.id, isPressed, timestamp);
+        controller.updateKeyState(key.id, isPressed, timestamp);
     }
 }

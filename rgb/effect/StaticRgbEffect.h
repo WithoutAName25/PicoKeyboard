@@ -7,9 +7,9 @@ class StaticRgbEffect : public IRgbEffect {
 private:
     uint32_t color;
 public:
-    StaticRgbEffect(uint32_t colorGRBW);
+    explicit StaticRgbEffect(uint32_t colorGRBW);
 
-    void start(RGBController &controller) override;
+    uint32_t getColor(LedConfig &led, absolute_time_t timestamp) override;
 };
 
 #endif //PICOKEYBOARD_STATICRGBEFFECT_H

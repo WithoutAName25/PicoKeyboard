@@ -14,8 +14,8 @@ add_subdirectory(lib)
 add_executable(PicoKeyboard main.cpp
         rgb/rgb.cpp
         rgb/rgb.h
-        rgb/RGBController.cpp
-        rgb/RGBController.h
+        rgb/RgbController.cpp
+        rgb/RgbController.h
         rotary_encoder/RotaryEncoder.cpp
         rotary_encoder/RotaryEncoder.h
         usb/main.cpp
@@ -43,9 +43,12 @@ add_executable(PicoKeyboard main.cpp
         rgb/effect/IRgbEffect.h
         rgb/effect/StaticRgbEffect.cpp
         rgb/effect/StaticRgbEffect.h
-        rgb/effect/RainbowEffect.cpp
-        rgb/effect/RainbowEffect.h
+        rgb/effect/RainbowWaveEffect.cpp
+        rgb/effect/RainbowWaveEffect.h
         main.h
+        rgb/effect/KeyStateEffect.cpp
+        rgb/effect/KeyStateEffect.h
+        rgb/LedConfig.h
 )
 
 pico_add_extra_outputs(PicoKeyboard)

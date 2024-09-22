@@ -5,6 +5,7 @@
 #include "pico/stdlib.h"
 #include "KeyStateController.h"
 #include "../util/IExecutable.h"
+#include "../util/Scheduler.h"
 
 struct HWKeyConfig {
     uint8_t pin;
@@ -13,12 +14,12 @@ struct HWKeyConfig {
 
 class KeyListener : public IExecutable {
 private:
-    KeyStateController *manager;
-    std::unique_ptr<HWKeyConfig[]> keys;
+    KeyStateController &controller;
+    HWKeyConfig *keys;
     uint8_t numKeys;
 
 public:
-    KeyListener(KeyStateController *manager, std::unique_ptr<HWKeyConfig[]> keys, uint8_t numKeys);
+    KeyListener(Scheduler &scheduler, KeyStateController &controller, HWKeyConfig *keys, uint8_t numKeys);
 
     void setupPins();
 

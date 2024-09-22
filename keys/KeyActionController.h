@@ -20,7 +20,7 @@ private:
     static bool isValid(KeyOverlayLayer *overlayLayer, absolute_time_t timestamp);
 
 public:
-    KeyActionController(uint8_t numKeys, KeyStateController manager);
+    KeyActionController(uint8_t numKeys, KeyStateController &stateController);
 
     KeyLayer &addLayer();
 
