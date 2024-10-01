@@ -1,0 +1,6 @@
+add_subdirectory(games)
+add_subdirectory(keys)
+add_subdirectory(rgb)
+add_subdirectory(rotary_encoder)
+add_subdirectory(usb)
+add_subdirectory(util)

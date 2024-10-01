@@ -9,52 +9,25 @@ set(CMAKE_CXX_STANDARD 17)
 
 pico_sdk_init()
 
-add_subdirectory(lib)
-
-add_executable(PicoKeyboard main.cpp
-        rgb/rgb.cpp
-        rgb/rgb.h
-        rgb/RgbController.cpp
-        rgb/RgbController.h
-        rotary_encoder/RotaryEncoder.cpp
-        rotary_encoder/RotaryEncoder.h
-        usb/main.cpp
-        usb/tusb_config.h
-        usb/usb_descriptors.cpp
-        usb/usb_descriptors.h
-        usb/main.h
-        games/pong/PongGame.cpp
-        games/pong/PongGame.h
-        keys/KeyStateController.cpp
-        keys/KeyStateController.h
-        util/Scheduler.cpp
-        util/Scheduler.h
-        keys/KeyListener.cpp
-        keys/KeyListener.h
-        keys/KeyActionController.cpp
-        keys/KeyActionController.h
-        keys/action/IKeyAction.h
-        keys/KeyLayer.cpp
-        keys/KeyLayer.h
-        keys/KeyOverlayLayer.h
-        util/IExecutable.h
-        keys/KeyboardController.cpp
-        keys/KeyboardController.h
-        rgb/effect/IRgbEffect.h
-        rgb/effect/StaticRgbEffect.cpp
-        rgb/effect/StaticRgbEffect.h
-        rgb/effect/RainbowWaveEffect.cpp
-        rgb/effect/RainbowWaveEffect.h
-        main.h
-        rgb/effect/KeyStateEffect.cpp
-        rgb/effect/KeyStateEffect.h
-        rgb/LedConfig.h
+add_executable(PicoKeyboard
+        src/main.cpp
 )
+
+add_subdirectory(lib)
+add_subdirectory(src)
 
 pico_add_extra_outputs(PicoKeyboard)
 
-target_link_libraries(PicoKeyboard pico_stdlib hardware_pio hardware_pwm LCDLibrary pico_unique_id tinyusb_device tinyusb_board)
+target_link_libraries(PicoKeyboard
+        pico_stdlib
+        LCDLibrary
+        pong_lib
+        keys_lib
+        rgb_lib
+        rotary_encoder_lib
+        usb_lib
+        util_lib)
 
-target_include_directories(PicoKeyboard PUBLIC usb)
-
-add_subdirectory(rgb)
+target_include_directories(PicoKeyboard
+        PRIVATE
+        ${CMAKE_SOURCE_DIR})
