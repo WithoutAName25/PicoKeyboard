@@ -43,28 +43,28 @@ bool KeyActionController::isValid(KeyOverlayLayer *overlayLayer, absolute_time_t
     return false;
 }
 
-KeyActionController::KeyActionController(uint8_t numKeys, KeyStateController &stateController)
-        : layers(),
-          numLayers(0),
+KeyActionController::KeyActionController(uint8_t numKeys, KeyStateController &keyStateController)
+        : keyStateController(keyStateController),
+          layers(),
           numKeys(numKeys),
           currentBaseLayer(nullptr),
           overlayLayerStack(nullptr) {
-    stateController.addKeyStateListener(this);
+    keyStateController.addKeyStateListener(this);
 }
 
 KeyLayer &KeyActionController::addLayer() {
-    layers.emplace_back(layers.size(), numKeys);
+    layers.emplace_back(numKeys);
     return layers.back();
 }
 
-void KeyActionController::switchBaseLayer(uint16_t layerId) {
-    currentBaseLayer = &layers[layerId];
+void KeyActionController::switchBaseLayer(KeyLayer &layer) {
+    currentBaseLayer = &layer;
     overlayLayerStack = nullptr;
 }
 
-void KeyActionController::addOverlayLayer(uint16_t layerId, uint8_t activatedByKeyId, absolute_time_t timestamp) {
+void KeyActionController::addOverlayLayer(KeyLayer &layer, uint8_t activatedByKeyId, absolute_time_t timestamp) {
     overlayLayerStack = std::make_unique<KeyOverlayLayer>(KeyOverlayLayer{
-            &layers[layerId],
+            &layer,
             WHILE_HELD,
             activatedByKeyId,
             timestamp,
@@ -73,9 +73,9 @@ void KeyActionController::addOverlayLayer(uint16_t layerId, uint8_t activatedByK
     });
 }
 
-void KeyActionController::addSingleUseOverlayLayer(uint16_t layerId, absolute_time_t timestamp) {
+void KeyActionController::addSingleUseOverlayLayer(KeyLayer &layer, absolute_time_t timestamp) {
     overlayLayerStack = std::make_unique<KeyOverlayLayer>(KeyOverlayLayer{
-            &layers[layerId],
+            &layer,
             SINGLE_USE,
             0,
             timestamp,
@@ -84,10 +84,10 @@ void KeyActionController::addSingleUseOverlayLayer(uint16_t layerId, absolute_ti
     });
 }
 
-void KeyActionController::addExpiringOverlayLayer(uint16_t layerId, absolute_time_t timestamp,
+void KeyActionController::addExpiringOverlayLayer(KeyLayer &layer, absolute_time_t timestamp,
                                                   absolute_time_t expirationTime) {
     overlayLayerStack = std::make_unique<KeyOverlayLayer>(KeyOverlayLayer{
-            &layers[layerId],
+            &layer,
             EXPIRING,
             0,
             timestamp,
@@ -101,6 +101,8 @@ ListenerPriority KeyActionController::getPriority() const {
 }
 
 void KeyActionController::onKeyStateChange(uint8_t keyId, KeyState &state, absolute_time_t timestamp) {
+    if (!state.isPressed) return;
+
     IKeyAction *action = getAction(keyId, timestamp);
     if (action != nullptr) {
         action->execute(keyId, &state, timestamp);

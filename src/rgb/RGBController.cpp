@@ -28,7 +28,3 @@ RGBController::RGBController(LedConfig *ledConfigs, uint8_t numLEDs)
         : ledConfigs(ledConfigs), numLEDs(numLEDs), data(new uint32_t[numLEDs]), currentEffect(nullptr) {
 
 }
-
-void RGBController::setEffect(std::unique_ptr<IRGBEffect> effect) {
-    currentEffect = std::move(effect);
-}

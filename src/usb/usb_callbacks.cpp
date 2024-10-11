@@ -28,7 +28,6 @@
 #include "usb_descriptors.h"
 #include "controller/HIDCommunication.h"
 #include "controller/HIDConsumerControl.h"
-#include "controller/HIDController.h"
 #include "controller/HIDGamepad.h"
 #include "controller/HIDKeyboard.h"
 #include "controller/HIDMouse.h"

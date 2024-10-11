@@ -5,7 +5,7 @@
 #include "../usb_descriptors.h"
 
 struct hid_communication_report_t {
-    uint8_t data[64];
+    uint8_t data[COMMUNICATION_REPORT_SIZE];
 };
 
 class HIDCommunication : public HIDController<hid_communication_report_t, REPORT_ID_COMMUNICATION> {

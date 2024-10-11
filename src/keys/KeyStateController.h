@@ -24,7 +24,7 @@ class IKeyStateListener {
 public:
     virtual ~IKeyStateListener() = default;
 
-    [[nodiscard]] virtual ListenerPriority getPriority() const = 0;
+    [[nodiscard]] virtual ListenerPriority getPriority() const;
 
     virtual void onKeyStateChange(uint8_t keyId, KeyState &state, absolute_time_t timestamp) = 0;
 };
@@ -36,6 +36,8 @@ private:
     uint8_t numKeys;
     std::unique_ptr<KeyState[]> keyStates;
     std::array<std::list<IKeyStateListener *>, static_cast<size_t>(ListenerPriority::Count)> listeners;
+    std::vector<KeyStateListenerReference> removeQueue;
+
 public:
     explicit KeyStateController(uint8_t numKeys);
 

@@ -1,9 +1,8 @@
 #include "KeyStateEffect.h"
 #include "neopixel.h"
+#include "keys.h"
 
-KeyStateEffect::KeyStateEffect(std::unique_ptr<IRGBEffect> colorEffect, uint64_t fadeOutMs)
-        : colorEffect(std::move(colorEffect)), fadeOutMs(fadeOutMs) {
-}
+extern KeyStateController keyStateController;
 
 uint32_t KeyStateEffect::getColor(LedConfig &led, absolute_time_t timestamp) {
     if (!led.isKeyLed) return 0;

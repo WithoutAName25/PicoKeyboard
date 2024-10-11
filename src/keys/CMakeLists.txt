@@ -5,7 +5,10 @@ add_library(keys_lib ${KEYS_SOURCES} ${KEYS_HEADERS})
 
 target_link_libraries(keys_lib
         PUBLIC
-        pico_stdlib)
+        pico_stdlib
+        rgb_lib
+        usb_lib
+        util_lib)
 
 target_include_directories(keys_lib
         PRIVATE

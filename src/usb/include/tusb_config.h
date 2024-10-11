@@ -96,8 +96,8 @@ extern "C" {
 #define CFG_TUD_MIDI              0
 #define CFG_TUD_VENDOR            0
 
-// HID buffer size Should be sufficient to hold ID + Data (max 64 Bytes)
-#define CFG_TUD_HID_EP_BUFSIZE    65
+// HID buffer size Should be sufficient to hold ID + Data
+#define CFG_TUD_HID_EP_BUFSIZE    64
 
 #ifdef __cplusplus
 }

@@ -9,6 +9,8 @@
 struct HWKeyConfig {
     uint8_t pin;
     uint8_t id;
+
+    HWKeyConfig(uint8_t pin, uint8_t id) : pin(pin), id(id) {}
 };
 
 class KeyListener : public IExecutable {

@@ -21,5 +21,8 @@ private:
 public:
     explicit RGBController(LedConfig *ledConfigs, uint8_t numLEDs);
 
-    void setEffect(std::unique_ptr<IRGBEffect> effect);
+    template<typename T>
+    void setEffect(T effect) {
+        currentEffect = std::make_unique<T>(std::move(effect));
+    }
 };
