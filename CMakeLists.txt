@@ -15,11 +15,7 @@ if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR AND NOT DEFINED KEYBOARD_
     )
 endif ()
 
-add_library(PicoKeyboard
-        include/PicoKeyboard.h
-        src/main.h
-        ${KEYBOARD_CONFIG_SOURCES}
-)
+add_library(PicoKeyboard)
 
 add_subdirectory(lib)
 add_subdirectory(src)
@@ -34,20 +30,27 @@ target_link_libraries(PicoKeyboard
         usb_lib
         util_lib)
 
-target_include_directories(PicoKeyboard
-        PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src
-        PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include)
-
 function(create_keyboard_side SIDE)
     add_executable(PicoKeyboard${SIDE}
-            src/main.cpp)
+            src/main.cpp
+            include/PicoKeyboard.h
+            src/main.h
+            ${KEYBOARD_CONFIG_SOURCES}
+    )
+
     target_link_libraries(PicoKeyboard${SIDE} PRIVATE PicoKeyboard)
+
     string(TOUPPER "${SIDE}" SIDE_UPPERCASE)
     target_compile_definitions(PicoKeyboard${SIDE}
             PUBLIC KEYBOARD_${SIDE_UPPERCASE})
+
     pico_add_extra_outputs(PicoKeyboard${SIDE})
+
+    target_include_directories(PicoKeyboard${SIDE}
+            PRIVATE
+            ${CMAKE_CURRENT_SOURCE_DIR}/src
+            PUBLIC
+            ${CMAKE_CURRENT_SOURCE_DIR}/include)
 endfunction()
 
 create_keyboard_side(Primary)
