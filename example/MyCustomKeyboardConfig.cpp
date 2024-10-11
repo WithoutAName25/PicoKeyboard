@@ -1,7 +1,14 @@
 #include "PicoKeyboard.h"
 
 void configureKeys(KeyActionController &keyActionController) {
-    
+#ifdef KEYBOARD_PRIMARY
+    KeyLayer &exampleBaseLayer = keyActionController.addLayer();
+    keyActionController.switchBaseLayer(exampleBaseLayer);
+
+    exampleBaseLayer.setAction(0, KeyAction(HID_KEY_SPACE));
+#else
+    (void) keyActionController;
+#endif
 }
 
 DisplayConfig commonDisplayConfig = DisplayConfig(
