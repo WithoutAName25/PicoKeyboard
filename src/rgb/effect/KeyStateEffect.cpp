@@ -1,6 +1,6 @@
 #include "KeyStateEffect.h"
-#include "neopixel.h"
 #include "keys.h"
+#include "../neopixel.h"
 
 extern KeyStateController keyStateController;
 
