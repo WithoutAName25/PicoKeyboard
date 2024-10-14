@@ -11,21 +11,6 @@ void configureKeys(KeyActionController &keyActionController) {
 #endif
 }
 
-DisplayConfig commonDisplayConfig = DisplayConfig(
-        spi1,
-        11,
-        10,
-        9,
-        8,
-        12,
-        25,
-        52,
-        40,
-        135,
-        240,
-        Degree_90
-);
-
 HWKeyConfig hwKeysPrimary[] = {
         HWKeyConfig(0, 0),
         HWKeyConfig(1, 1),
@@ -54,33 +39,46 @@ LedConfig ledConfigsSecondary[] = {
         LedConfig(4, 9, -2, -1)
 };
 
-PicoKeyboardDeviceConfig primary = PicoKeyboardDeviceConfig(
-        3,
-        hwKeysPrimary,
-        3,
-        5,
-        ledConfigsPrimary,
-        commonDisplayConfig,
-        uart1,
-        4,
-        5
-);
+PicoKeyboardConfig getKeyboardConfig() {
+    DisplayConfig commonDisplayConfig = DisplayConfig(
+            spi1,
+            11,
+            10,
+            9,
+            8,
+            12,
+            25,
+            52,
+            40,
+            135,
+            240,
+            Degree_90
+    );
 
-PicoKeyboardDeviceConfig secondary = PicoKeyboardDeviceConfig(
-        3,
-        hwKeysSecondary,
-        3,
-        5,
-        ledConfigsSecondary,
-        commonDisplayConfig,
-        uart1,
-        4,
-        5
-);
-
-const PicoKeyboardConfig config = PicoKeyboardConfig(
-        6,
-        configureKeys,
-        primary,
-        secondary
-);
+    return {
+            6,
+            configureKeys,
+            {
+                    3,
+                    hwKeysPrimary,
+                    3,
+                    5,
+                    ledConfigsPrimary,
+                    commonDisplayConfig,
+                    uart1,
+                    4,
+                    5
+            },
+            {
+                    3,
+                    hwKeysSecondary,
+                    3,
+                    5,
+                    ledConfigsSecondary,
+                    commonDisplayConfig,
+                    uart1,
+                    4,
+                    5
+            }
+    };
+}

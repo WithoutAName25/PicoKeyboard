@@ -18,6 +18,8 @@ bool isPrimary = true;
 bool isPrimary = false;
 #endif
 
+PicoKeyboardConfig config = getKeyboardConfig();
+
 PicoKeyboardDeviceConfig &deviceConfig = isPrimary ? config.primary : config.secondary;
 
 DisplayConfig &display = deviceConfig.display;

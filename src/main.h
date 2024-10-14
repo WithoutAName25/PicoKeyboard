@@ -51,7 +51,7 @@ struct PicoKeyboardDeviceConfig {
     uint8_t ledPin;
     uint8_t numLEDs;
     LedConfig *leds;
-    DisplayConfig &display;
+    DisplayConfig display;
     uart_inst *uart;
     uint8_t txPin;
     uint8_t rxPin;
@@ -61,7 +61,7 @@ struct PicoKeyboardDeviceConfig {
                              uint8_t ledPin,
                              uint8_t numLEDs,
                              LedConfig *leds,
-                             DisplayConfig &display,
+                             DisplayConfig display,
                              uart_inst *uart,
                              uint8_t txPin,
                              uint8_t rxPin)
@@ -81,17 +81,17 @@ struct PicoKeyboardConfig {
 
     void (*configureKeys)(KeyActionController &);
 
-    PicoKeyboardDeviceConfig &primary;
-    PicoKeyboardDeviceConfig &secondary;
+    PicoKeyboardDeviceConfig primary;
+    PicoKeyboardDeviceConfig secondary;
 
     PicoKeyboardConfig(uint8_t totalNumKeys,
                        void (*configureKeys)(KeyActionController &),
-                       PicoKeyboardDeviceConfig &primary,
-                       PicoKeyboardDeviceConfig &secondary)
+                       PicoKeyboardDeviceConfig primary,
+                       PicoKeyboardDeviceConfig secondary)
             : totalNumKeys(totalNumKeys),
               configureKeys(configureKeys),
               primary(primary),
               secondary(secondary) {}
 };
 
-extern const PicoKeyboardConfig config;
+PicoKeyboardConfig getKeyboardConfig();
