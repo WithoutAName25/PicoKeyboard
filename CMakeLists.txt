@@ -5,7 +5,7 @@ include(pico_sdk_import.cmake)
 project(PicoKeyboard C CXX ASM)
 
 set(CMAKE_C_STANDARD 11)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 pico_sdk_init()
 
@@ -23,6 +23,7 @@ add_subdirectory(src)
 target_link_libraries(PicoKeyboard
         pico_stdlib
         LCDLibrary
+        communication_lib
         pong_lib
         keys_lib
         rgb_lib

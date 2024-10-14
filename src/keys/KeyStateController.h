@@ -33,7 +33,6 @@ using KeyStateListenerReference = std::pair<ListenerPriority, std::list<IKeyStat
 
 class KeyStateController {
 private:
-    uint8_t numKeys;
     std::unique_ptr<KeyState[]> keyStates;
     std::array<std::list<IKeyStateListener *>, static_cast<size_t>(ListenerPriority::Count)> listeners;
     std::vector<KeyStateListenerReference> removeQueue;
@@ -41,7 +40,7 @@ private:
 public:
     explicit KeyStateController(uint8_t numKeys);
 
-    void updateKeyState(uint8_t keyId, bool isPressed, absolute_time_t timestamp);
+    virtual void updateKeyState(uint8_t keyId, bool isPressed, absolute_time_t timestamp);
 
     KeyState &getKeyState(uint8_t keyId);
 

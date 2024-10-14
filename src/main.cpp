@@ -1,4 +1,5 @@
 #include "LCDLibrary.h"
+#include "communication.h"
 #include "keys.h"
 #include "rgb.h"
 #include "rgb_effects.h"
@@ -6,15 +7,18 @@
 #include "main.h"
 
 #ifdef KEYBOARD_PRIMARY
-#include "key_actions.h"
+
 #include "usb.h"
+
 #endif
 
 #ifdef KEYBOARD_PRIMARY
-PicoKeyboardDeviceConfig &deviceConfig = config.primary;
-#elifdef KEYBOARD_SECONDARY
-PicoKeyboardDeviceConfig &deviceConfig = config.secondary;
+bool isPrimary = true;
+#elif defined(KEYBOARD_SECONDARY)
+bool isPrimary = false;
 #endif
+
+PicoKeyboardDeviceConfig &deviceConfig = isPrimary ? config.primary : config.secondary;
 
 DisplayConfig &display = deviceConfig.display;
 
@@ -27,9 +31,17 @@ LCDDirectGraphics lcd(&lcd_spi, display.resetPin, display.backlightPin,
 
 Scheduler scheduler;
 
+InterDeviceCommunicator interDeviceCommunicator(deviceConfig.uart, deviceConfig.txPin, deviceConfig.rxPin);
+
+CommandController commandController(interDeviceCommunicator, isPrimary);
+
 RGBController rgbController(deviceConfig.leds, deviceConfig.numLEDs);
 
+#ifdef KEYBOARD_PRIMARY
 KeyStateController keyStateController(config.totalNumKeys);
+#elif defined(KEYBOARD_SECONDARY)
+SecondaryKeyStateController keyStateController(config.totalNumKeys);
+#endif
 
 KeyListener keyListener(keyStateController, deviceConfig.hwKeys, deviceConfig.numHwKeys);
 
@@ -69,8 +81,10 @@ int main() {
 
     keyListener.setupPins();
 
-    scheduler.addPeriodicTask(&rgbController, get_absolute_time(), 5000);
     scheduler.addPeriodicTask(&keyListener, get_absolute_time(), 500);
+    scheduler.addPeriodicTask(&interDeviceCommunicator, get_absolute_time(), 100);
+    scheduler.addPeriodicTask(&commandController, get_absolute_time(), 100);
+    scheduler.addPeriodicTask(&rgbController, get_absolute_time(), 5000);
 
 #ifdef KEYBOARD_PRIMARY
     tud_init(BOARD_TUD_RHPORT);

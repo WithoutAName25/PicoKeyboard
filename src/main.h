@@ -52,6 +52,7 @@ struct PicoKeyboardDeviceConfig {
     uint8_t numLEDs;
     LedConfig *leds;
     DisplayConfig &display;
+    uart_inst *uart;
     uint8_t txPin;
     uint8_t rxPin;
 
@@ -61,6 +62,7 @@ struct PicoKeyboardDeviceConfig {
                              uint8_t numLEDs,
                              LedConfig *leds,
                              DisplayConfig &display,
+                             uart_inst *uart,
                              uint8_t txPin,
                              uint8_t rxPin)
             : numHwKeys(numHwKeys),
@@ -69,6 +71,7 @@ struct PicoKeyboardDeviceConfig {
               numLEDs(numLEDs),
               leds(leds),
               display(display),
+              uart(uart),
               txPin(txPin),
               rxPin(rxPin) {}
 };

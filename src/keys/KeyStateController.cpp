@@ -5,7 +5,7 @@ ListenerPriority IKeyStateListener::getPriority() const {
 }
 
 KeyStateController::KeyStateController(uint8_t numKeys)
-        : numKeys(numKeys), keyStates(new KeyState[numKeys]), listeners() {
+        : keyStates(new KeyState[numKeys]), listeners() {
 }
 
 void KeyStateController::updateKeyState(uint8_t keyId, bool isPressed, absolute_time_t timestamp) {

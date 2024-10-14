@@ -61,6 +61,7 @@ PicoKeyboardDeviceConfig primary = PicoKeyboardDeviceConfig(
         5,
         ledConfigsPrimary,
         commonDisplayConfig,
+        uart1,
         4,
         5
 );
@@ -72,6 +73,7 @@ PicoKeyboardDeviceConfig secondary = PicoKeyboardDeviceConfig(
         5,
         ledConfigsSecondary,
         commonDisplayConfig,
+        uart1,
         4,
         5
 );

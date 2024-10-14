@@ -1,3 +1,4 @@
+add_subdirectory(communication)
 add_subdirectory(games)
 add_subdirectory(keys)
 add_subdirectory(rgb)
