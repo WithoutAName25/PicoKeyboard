@@ -8,7 +8,7 @@ using OverlayLayerReference = std::list<KeyLayer *>::iterator;
 class KeyActionController : IKeyStateListener {
 private:
     KeyStateController &keyStateController;
-    std::vector<KeyLayer> layers;
+    std::list<KeyLayer> layers;
     uint8_t numKeys;
     KeyLayer *currentBaseLayer;
     std::list<KeyLayer *> activeOverlayLayers;
