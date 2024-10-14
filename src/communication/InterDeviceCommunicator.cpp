@@ -17,6 +17,8 @@ InterDeviceCommunicator::InterDeviceCommunicator(uart_inst *uart, uint8_t txPin,
     gpio_set_function(txPin, GPIO_FUNC_UART);
     gpio_set_function(rxPin, GPIO_FUNC_UART);
 
+    gpio_set_pulls(rxPin, true, false);
+
     uart_init(uart, 115200);
 }
 
