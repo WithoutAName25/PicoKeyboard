@@ -2,8 +2,10 @@
 
 #include "IKeyAction.h"
 #include "util.h"
+#include "IPressReleaseAction.h"
 
-class PressReleaseAction : public IKeyAction, private IKeyStateListener, private IExecutable {
+class PressReleaseAction
+        : public IKeyAction, public IPressReleaseAction, private IKeyStateListener, private IExecutable {
 private:
     uint8_t activatedBy = 0;
     KeyStateListenerReference listenerReference;
@@ -16,7 +18,4 @@ private:
 public:
     void execute(uint8_t keyId, KeyState *state, absolute_time_t timestamp) override;
 
-    virtual void press() = 0;
-
-    virtual void release() = 0;
 };

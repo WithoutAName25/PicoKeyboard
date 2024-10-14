@@ -30,7 +30,7 @@ public:
               holdTimeout(holdTimeout) {}
 
     template<typename T0, typename T1>
-    TabHoldAction(T0 tabAction, T1 holdAction, uint64_t timeout)
+    [[maybe_unused]] TabHoldAction(T0 tabAction, T1 holdAction, uint64_t timeout)
             : TabHoldAction(tabAction, holdAction, timeout, timeout) {}
 
     void execute(uint8_t keyId, KeyState *state, absolute_time_t timestamp) override;

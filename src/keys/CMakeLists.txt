@@ -12,7 +12,5 @@ target_link_libraries(keys_lib
         util_lib)
 
 target_include_directories(keys_lib
-        PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}
         PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include)

@@ -7,7 +7,7 @@ private:
     std::vector<std::unique_ptr<IKeyAction>> actions;
 
     template<typename T, typename... Args>
-    void addInstance(T instance, Args... args) {
+    [[maybe_unused]] void addInstance(T instance, Args... args) {
         actions.emplace_back(std::make_unique<T>(std::move(instance)));
         addInstance(args...);
     };

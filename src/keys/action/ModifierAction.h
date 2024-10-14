@@ -3,12 +3,12 @@
 #include "PressReleaseAction.h"
 #include "usb.h"
 
-class ModifierAction : public PressReleaseAction {
+class [[maybe_unused]] ModifierAction : public PressReleaseAction {
 private:
     Modifier modifier;
 
 public:
-    explicit ModifierAction(Modifier modifier);
+    [[maybe_unused]] explicit ModifierAction(Modifier modifier);
 
     void press() override;
 

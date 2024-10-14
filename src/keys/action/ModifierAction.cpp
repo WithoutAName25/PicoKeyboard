@@ -3,7 +3,7 @@
 
 extern HIDKeyboard hidKeyboard;
 
-ModifierAction::ModifierAction(Modifier modifier) : modifier(modifier) {}
+[[maybe_unused]] ModifierAction::ModifierAction(Modifier modifier) : modifier(modifier) {}
 
 void ModifierAction::press() {
     hidKeyboard.pressModifier(modifier);

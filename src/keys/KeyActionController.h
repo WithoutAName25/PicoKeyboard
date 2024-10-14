@@ -2,7 +2,8 @@
 
 #include <memory>
 #include "KeyLayer.h"
-#include "KeyOverlayLayer.h"
+
+using OverlayLayerReference = std::list<KeyLayer *>::iterator;
 
 class KeyActionController : IKeyStateListener {
 private:
@@ -10,13 +11,9 @@ private:
     std::vector<KeyLayer> layers;
     uint8_t numKeys;
     KeyLayer *currentBaseLayer;
-    std::unique_ptr<KeyOverlayLayer> overlayLayerStack;
+    std::list<KeyLayer *> activeOverlayLayers;
 
-    IKeyAction *getAction(uint8_t keyId, absolute_time_t timestamp);
-
-    void removeOverlayLayer(KeyOverlayLayer *last, KeyOverlayLayer *layer);
-
-    bool isValid(KeyOverlayLayer *overlayLayer, absolute_time_t timestamp);
+    IKeyAction *getAction(uint8_t keyId);
 
 public:
     KeyActionController(uint8_t numKeys, KeyStateController &keyStateController);
@@ -25,11 +22,9 @@ public:
 
     void switchBaseLayer(KeyLayer &layer);
 
-    void addOverlayLayer(KeyLayer &layer, uint8_t activatedByKeyId, absolute_time_t timestamp);
+    OverlayLayerReference addOverlayLayer(KeyLayer &layer);
 
-    void addSingleUseOverlayLayer(KeyLayer &layer, absolute_time_t timestamp);
-
-    void addExpiringOverlayLayer(KeyLayer &layer, absolute_time_t timestamp, absolute_time_t expirationTime);
+    void removeOverlayLayer(OverlayLayerReference reference);
 
     [[nodiscard]] ListenerPriority getPriority() const override;
 

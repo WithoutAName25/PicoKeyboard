@@ -48,8 +48,6 @@ function(create_keyboard_side SIDE)
     pico_add_extra_outputs(PicoKeyboard${SIDE})
 
     target_include_directories(PicoKeyboard${SIDE}
-            PRIVATE
-            ${CMAKE_CURRENT_SOURCE_DIR}/src
             PUBLIC
             ${CMAKE_CURRENT_SOURCE_DIR}/include)
 endfunction()
