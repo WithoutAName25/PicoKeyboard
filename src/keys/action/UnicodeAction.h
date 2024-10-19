@@ -5,10 +5,10 @@
 
 #define UnicodeLength 6
 
-class UnicodeAction : public IKeyAction {
-    hid_keyboard_report_t reports[UnicodeLength + 2];
+class [[maybe_unused]] UnicodeAction : public IKeyAction {
+    hid_keyboard_report_t reports[UnicodeLength];
 public:
-    explicit UnicodeAction(uint32_t unicode);
+    [[maybe_unused]] explicit UnicodeAction(uint32_t unicode);
 
     void execute(uint8_t keyId, KeyState *state, absolute_time_t timestamp) override;
 };
