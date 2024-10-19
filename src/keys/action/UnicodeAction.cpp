@@ -1,6 +1,9 @@
 #include "UnicodeAction.h"
 
+#define UNICODE_INPUT_INIT_DELAY 100000
+
 extern HIDKeyboard hidKeyboard;
+extern Scheduler scheduler;
 
 uint8_t hexKeyCodes[] = {
         HID_KEY_0,
@@ -39,6 +42,15 @@ hid_keyboard_report_t emptyReport = {
         {0, 0, 0, 0, 0, 0}
 };
 
+void UnicodeAction::execute(absolute_time_t timestamp) {
+    for (hid_keyboard_report_t &report: reports) {
+        hidKeyboard.addCustomReport(&report);
+        hidKeyboard.addCustomReport(&emptyReport);
+    }
+    hidKeyboard.addCustomReport(&finishReport);
+    hidKeyboard.addCustomReport(&emptyReport);
+}
+
 [[maybe_unused]] UnicodeAction::UnicodeAction(uint32_t unicode) : reports() {
     for (int i = 0; i < UnicodeLength; ++i) {
         reports[i] = {
@@ -52,10 +64,6 @@ hid_keyboard_report_t emptyReport = {
 void UnicodeAction::execute(uint8_t keyId, KeyState *state, absolute_time_t timestamp) {
     hidKeyboard.addCustomReport(&emptyReport);
     hidKeyboard.addCustomReport(&initReport);
-    for (hid_keyboard_report_t &report: reports) {
-        hidKeyboard.addCustomReport(&report);
-        hidKeyboard.addCustomReport(&emptyReport);
-    }
-    hidKeyboard.addCustomReport(&finishReport);
     hidKeyboard.addCustomReport(&emptyReport);
+    scheduler.addTask(this, timestamp + UNICODE_INPUT_INIT_DELAY);
 }
