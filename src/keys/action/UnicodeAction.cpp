@@ -49,7 +49,7 @@ void UnicodeAction::execute(absolute_time_t timestamp) {
 
         leadingZeros = false;
         hidKeyboard.addCustomReport(&reports[i]);
-        if (i != UnicodeLength - 1 && reports[i].keycode[0] != reports[i + 1].keycode[0]) {
+        if (i != UnicodeLength - 1 && reports[i].keycode[0] == reports[i + 1].keycode[0]) {
             hidKeyboard.addCustomReport(&emptyReport);
         }
     }
