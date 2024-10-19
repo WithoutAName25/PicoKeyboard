@@ -1,6 +1,6 @@
 #include "UnicodeAction.h"
 
-#define UNICODE_INPUT_INIT_DELAY 100000
+#define UNICODE_INPUT_INIT_DELAY 50000
 
 extern HIDKeyboard hidKeyboard;
 extern Scheduler scheduler;
@@ -43,9 +43,15 @@ hid_keyboard_report_t emptyReport = {
 };
 
 void UnicodeAction::execute(absolute_time_t timestamp) {
-    for (hid_keyboard_report_t &report: reports) {
-        hidKeyboard.addCustomReport(&report);
-        hidKeyboard.addCustomReport(&emptyReport);
+    bool leadingZeros = true;
+    for (int i = 0; i < UnicodeLength; ++i) {
+        if (leadingZeros && reports[i].keycode[0] == HID_KEY_0) continue;
+
+        leadingZeros = false;
+        hidKeyboard.addCustomReport(&reports[i]);
+        if (i != UnicodeLength - 1 && reports[i].keycode[0] != reports[i + 1].keycode[0]) {
+            hidKeyboard.addCustomReport(&emptyReport);
+        }
     }
     hidKeyboard.addCustomReport(&finishReport);
     hidKeyboard.addCustomReport(&emptyReport);
