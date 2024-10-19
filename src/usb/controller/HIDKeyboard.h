@@ -25,6 +25,7 @@ private:
     uint8_t modifierPressCounts[8] = {0};
     std::vector<KeyPressState> keyPressStates;
     bool lastReportEmpty = false;
+
 public:
     HIDKeyboard() = default;
 

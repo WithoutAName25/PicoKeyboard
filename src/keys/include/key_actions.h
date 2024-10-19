@@ -8,3 +8,4 @@
 #include "../action/OverlayLayerAction.h"
 #include "../action/SingleUseOverlayLayerAction.h"
 #include "../action/TabHoldAction.h"
+#include "../action/UnicodeAction.h"
