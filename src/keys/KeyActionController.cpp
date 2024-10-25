@@ -30,8 +30,8 @@ void KeyActionController::switchBaseLayer(KeyLayer &layer) {
 }
 
 OverlayLayerReference KeyActionController::addOverlayLayer(KeyLayer &layer) {
-    activeOverlayLayers.emplace_back(&layer);
-    return --activeOverlayLayers.end();
+    activeOverlayLayers.emplace_front(&layer);
+    return activeOverlayLayers.begin();
 }
 
 void KeyActionController::removeOverlayLayer(OverlayLayerReference reference) {
