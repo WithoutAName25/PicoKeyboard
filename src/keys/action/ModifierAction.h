@@ -10,7 +10,7 @@ private:
 public:
     [[maybe_unused]] explicit ModifierAction(Modifier modifier);
 
-    void press() override;
+    void press(absolute_time_t timestamp) override;
 
-    void release() override;
+    void release(absolute_time_t timestamp) override;
 };

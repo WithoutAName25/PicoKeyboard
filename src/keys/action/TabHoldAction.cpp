@@ -9,6 +9,7 @@ void TabHoldAction::execute(absolute_time_t timestamp) {
     if (currentState.isPressed && currentState.totalPressCount == activationState.totalPressCount) {
         holdAction->execute(activationKeyId, &activationState, timestamp);
     }
+    task = nullptr;
 }
 
 void TabHoldAction::onKeyStateChange(uint8_t keyId, KeyState &state, absolute_time_t timestamp) {
@@ -21,9 +22,17 @@ void TabHoldAction::onKeyStateChange(uint8_t keyId, KeyState &state, absolute_ti
 }
 
 void TabHoldAction::execute(uint8_t keyId, KeyState *state, absolute_time_t timestamp) {
+    if (task != nullptr) {
+        task->cancel();
+        task = nullptr;
+    }
+    if (timestamp < activationTimestamp + tabHoldTimeout) {
+        tabAction->execute(keyId, state, timestamp);
+    } else {
+        task = scheduler.addTask(this, timestamp + holdTimeout);
+        listenerReference = keyStateController.addKeyStateListener(this);
+    }
     activationKeyId = keyId;
     activationState = *state;
     activationTimestamp = timestamp;
-    scheduler.addTask(this, timestamp + holdTimeout);
-    listenerReference = keyStateController.addKeyStateListener(this);
 }

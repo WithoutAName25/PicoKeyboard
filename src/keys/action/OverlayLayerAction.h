@@ -12,7 +12,7 @@ private:
 public:
     [[maybe_unused]] explicit OverlayLayerAction(KeyLayer &layer);
 
-    void press() override;
+    void press(absolute_time_t timestamp) override;
 
-    void release() override;
+    void release(absolute_time_t timestamp) override;
 };

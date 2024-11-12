@@ -17,9 +17,9 @@ Task *Scheduler::addPeriodicTask(IExecutable *executable, absolute_time_t firstE
 
 void Scheduler::run() {
     while (!queue->empty()) {
-        absolute_time_t executionTime = queue->top()->nextExecutionTime;
-        sleep_until(executionTime);
         Task *task = queue->top();
+        absolute_time_t executionTime = task->nextExecutionTime;
+        sleep_until(executionTime);
         queue->pop();
         if (!task->cancelled) {
             task->executable->execute(executionTime);

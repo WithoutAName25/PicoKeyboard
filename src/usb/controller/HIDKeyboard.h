@@ -3,6 +3,7 @@
 #include "HIDController.h"
 #include "tusb.h"
 #include "../usb_descriptors.h"
+#include <list>
 
 enum class Modifier {
     LEFT_CTRL,
@@ -18,12 +19,20 @@ enum class Modifier {
 struct KeyPressState {
     uint8_t keycode;
     uint8_t count;
+    absolute_time_t activation;
+    bool reported;
+
+    KeyPressState(uint8_t keycode, uint8_t count, absolute_time_t activation)
+            : keycode(keycode), count(count), activation(activation), reported(false) {}
 };
+
+using KeyBlockingReference = std::list<absolute_time_t>::iterator;
 
 class HIDKeyboard : public HIDController<hid_keyboard_report_t, REPORT_ID_KEYBOARD> {
 private:
     uint8_t modifierPressCounts[8] = {0};
     std::vector<KeyPressState> keyPressStates;
+    std::list<absolute_time_t> blockingTimes;
     bool lastReportEmpty = false;
 
 public:
@@ -33,9 +42,13 @@ public:
 
     void releaseModifier(Modifier modifier);
 
-    void pressKey(uint8_t keycode);
+    void pressKey(uint8_t keycode, absolute_time_t timestamp);
 
-    void releaseKey(uint8_t keycode);
+    void releaseKey(uint8_t keycode, absolute_time_t timestamp);
+
+    KeyBlockingReference blockNewKeys(absolute_time_t timestamp);
+
+    void unblockNewKeys(KeyBlockingReference reference);
 
     bool hasReport() override;
 

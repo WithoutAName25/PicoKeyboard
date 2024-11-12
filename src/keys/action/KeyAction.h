@@ -8,7 +8,7 @@ private:
 public:
     explicit KeyAction(uint8_t keycode);
 
-    void press() override;
+    void press(absolute_time_t timestamp) override;
 
-    void release() override;
+    void release(absolute_time_t timestamp) override;
 };
