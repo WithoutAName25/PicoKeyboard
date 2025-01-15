@@ -30,7 +30,7 @@ using KeyBlockingReference = std::list<absolute_time_t>::iterator;
 
 class HIDKeyboard : public HIDController<hid_keyboard_report_t, REPORT_ID_KEYBOARD> {
 private:
-    uint8_t modifierPressCounts[8] = {0};
+    uint8_t modifierPressCounts[8] = {};
     std::vector<KeyPressState> keyPressStates;
     std::list<absolute_time_t> blockingTimes;
     bool lastReportEmpty = false;
