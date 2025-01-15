@@ -66,17 +66,13 @@ hid_keyboard_report_t HIDKeyboard::getReport() {
         }
     }
 
-    for (int i = 0; i < std::min<size_t>(6, keyPressStates.size()); ++i) {
-        report.keycode[i] = keyPressStates.at(i).keycode;
-        empty = false;
-    }
     int i = 0;
     for (auto state = keyPressStates.begin(); state != keyPressStates.end();) {
         if (state->count == 0 && state->reported) {
             state = keyPressStates.erase(state);
             continue;
         }
-        if (blockingTimes.empty() || state->activation < blockingTimes.front()) {
+        if (blockingTimes.empty() || state->activation <= blockingTimes.front()) {
             report.keycode[i] = state->keycode;
             state->reported = true;
             empty = false;
