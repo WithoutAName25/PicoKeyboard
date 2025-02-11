@@ -2,14 +2,14 @@
 
 extern KeyStateController keyStateController;
 
-void PressReleaseAction::onKeyStateChange(uint8_t keyId, KeyState& state, absolute_time_t timestamp) {
+void PressReleaseAction::onKeyStateChange(const uint8_t keyId, const KeyState& state, const absolute_time_t timestamp) {
     if (activatedBy == keyId && !state.isPressed) {
         release(timestamp);
         keyStateController.removeKeyStateListener(listenerReference);
     }
 }
 
-void PressReleaseAction::execute(uint8_t keyId, KeyState* state, absolute_time_t timestamp) {
+void PressReleaseAction::execute(const uint8_t keyId, const KeyState* state, const absolute_time_t timestamp) {
     activatedBy = keyId;
     activationTimestamp = timestamp;
     press(timestamp);

@@ -6,7 +6,6 @@
 
 template<typename ReportType, uint8_t ReportID>
 class HIDController : public IExecutable {
-private:
     std::queue<ReportType *> customReportsQueue;
     bool lastReportWasCustom = false;
 
@@ -32,7 +31,7 @@ public:
             customReportsQueue.pop();
             lastReportWasCustom = true;
         }
-    };
+    }
 
     void addCustomReport(ReportType *report) {
         customReportsQueue.push(report);

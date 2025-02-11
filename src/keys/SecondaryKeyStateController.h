@@ -2,7 +2,7 @@
 
 #include "KeyStateController.h"
 
-class SecondaryKeyStateController : public KeyStateController {
+class SecondaryKeyStateController final : public KeyStateController {
 public:
     explicit SecondaryKeyStateController(uint8_t numKeys);
 

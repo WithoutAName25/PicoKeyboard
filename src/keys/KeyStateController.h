@@ -3,7 +3,6 @@
 #include <memory>
 #include <functional>
 #include <list>
-#include <map>
 #include "pico/stdlib.h"
 
 struct KeyState {
@@ -26,25 +25,26 @@ public:
 
     [[nodiscard]] virtual ListenerPriority getPriority() const;
 
-    virtual void onKeyStateChange(uint8_t keyId, KeyState &state, absolute_time_t timestamp) = 0;
+    virtual void onKeyStateChange(uint8_t keyId, const KeyState& state, absolute_time_t timestamp) = 0;
 };
 
-using KeyStateListenerReference = std::pair<ListenerPriority, std::list<IKeyStateListener *>::iterator>;
+using KeyStateListenerReference = std::pair<ListenerPriority, std::list<IKeyStateListener*>::iterator>;
 
 class KeyStateController {
-private:
     std::unique_ptr<KeyState[]> keyStates;
-    std::array<std::list<IKeyStateListener *>, static_cast<size_t>(ListenerPriority::Count)> listeners;
+    std::array<std::list<IKeyStateListener*>, static_cast<size_t>(ListenerPriority::Count)> listeners;
     std::vector<KeyStateListenerReference> removeQueue;
 
 public:
     explicit KeyStateController(uint8_t numKeys);
 
+    virtual ~KeyStateController() = default;
+
     virtual void updateKeyState(uint8_t keyId, bool isPressed, absolute_time_t timestamp);
 
-    KeyState &getKeyState(uint8_t keyId);
+    KeyState& getKeyState(uint8_t keyId);
 
-    KeyStateListenerReference addKeyStateListener(IKeyStateListener *listener);
+    KeyStateListenerReference addKeyStateListener(IKeyStateListener* listener);
 
-    void removeKeyStateListener(KeyStateListenerReference listenerReference);
+    void removeKeyStateListener(const KeyStateListenerReference& listenerReference);
 };

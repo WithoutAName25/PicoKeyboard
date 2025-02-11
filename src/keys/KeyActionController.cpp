@@ -1,9 +1,8 @@
 #include "KeyActionController.h"
 
-IKeyAction *KeyActionController::getAction(uint8_t keyId) {
-    for (KeyLayer *overlayLayer: activeOverlayLayers) {
-        IKeyAction *action = overlayLayer->getAction(keyId);
-        if (action != nullptr) {
+IKeyAction* KeyActionController::getAction(const uint8_t keyId) const {
+    for (const KeyLayer* overlayLayer : activeOverlayLayers) {
+        if (IKeyAction* action = overlayLayer->getAction(keyId); action != nullptr) {
             return action;
         }
     }
@@ -11,30 +10,28 @@ IKeyAction *KeyActionController::getAction(uint8_t keyId) {
     return currentBaseLayer->getAction(keyId);
 }
 
-KeyActionController::KeyActionController(uint8_t numKeys, KeyStateController &keyStateController)
-        : keyStateController(keyStateController),
-          layers(),
-          numKeys(numKeys),
-          currentBaseLayer(nullptr),
-          activeOverlayLayers() {
+KeyActionController::KeyActionController(const uint8_t numKeys, KeyStateController& keyStateController)
+    : keyStateController(keyStateController),
+      numKeys(numKeys),
+      currentBaseLayer(nullptr) {
     keyStateController.addKeyStateListener(this);
 }
 
-KeyLayer &KeyActionController::addLayer() {
+KeyLayer& KeyActionController::addLayer() {
     layers.emplace_back(numKeys);
     return layers.back();
 }
 
-void KeyActionController::switchBaseLayer(KeyLayer &layer) {
+void KeyActionController::switchBaseLayer(KeyLayer& layer) {
     currentBaseLayer = &layer;
 }
 
-OverlayLayerReference KeyActionController::addOverlayLayer(KeyLayer &layer) {
+OverlayLayerReference KeyActionController::addOverlayLayer(KeyLayer& layer) {
     activeOverlayLayers.emplace_front(&layer);
     return activeOverlayLayers.begin();
 }
 
-void KeyActionController::removeOverlayLayer(OverlayLayerReference reference) {
+void KeyActionController::removeOverlayLayer(const OverlayLayerReference reference) {
     activeOverlayLayers.erase(reference);
 }
 
@@ -42,11 +39,11 @@ ListenerPriority KeyActionController::getPriority() const {
     return ListenerPriority::WITH_KEYBOARD_CONTROLLER;
 }
 
-void KeyActionController::onKeyStateChange(uint8_t keyId, KeyState &state, absolute_time_t timestamp) {
+void KeyActionController::onKeyStateChange(const uint8_t keyId, const KeyState& state,
+                                           const absolute_time_t timestamp) {
     if (!state.isPressed) return;
 
-    IKeyAction *action = getAction(keyId);
-    if (action != nullptr) {
+    if (const auto action = getAction(keyId); action != nullptr) {
         action->execute(keyId, &state, timestamp);
     }
 }

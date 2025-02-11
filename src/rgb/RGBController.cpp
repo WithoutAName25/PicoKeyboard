@@ -2,17 +2,17 @@
 #include "neopixel.h"
 #include "effect/IRGBEffect.h"
 
-void RGBController::setPixel(uint8_t hwNumber, uint32_t colorGRBW) {
+void RGBController::setPixel(const uint8_t hwNumber, const uint32_t colorGRBW) {
     data[hwNumber] = colorGRBW;
 }
 
-void RGBController::write() {
+void RGBController::write() const {
     for (int i = 0; i < numLEDs; ++i) {
         rgb_put_pixel(data[i]);
     }
 }
 
-void RGBController::execute(absolute_time_t timestamp) {
+void RGBController::execute(const absolute_time_t timestamp) {
     for (int i = 0; i < numLEDs; ++i) {
         LedConfig &ledConfig = ledConfigs[i];
         if (currentEffect == nullptr) {
@@ -24,7 +24,11 @@ void RGBController::execute(absolute_time_t timestamp) {
     write();
 }
 
-RGBController::RGBController(LedConfig *ledConfigs, uint8_t numLEDs)
+RGBController::RGBController(LedConfig *ledConfigs, const uint8_t numLEDs)
         : ledConfigs(ledConfigs), numLEDs(numLEDs), data(new uint32_t[numLEDs]), currentEffect(nullptr) {
 
+}
+
+void RGBController::setEffect(IRGBEffect* effect) {
+    currentEffect = effect;
 }

@@ -3,18 +3,18 @@
 #include <queue>
 #include <memory>
 #include "Task.h"
+#include "pico/stdlib.h"
 
 class Scheduler {
-private:
     using PriorityQueue = std::priority_queue<Task *, std::vector<Task *>, CompareTask>;
 
     std::unique_ptr<PriorityQueue> queue;
 public:
     Scheduler();
 
-    Task *addTask(IExecutable *executable, absolute_time_t executionTime);
+    Task *addTask(IExecutable *executable, absolute_time_t executionTime) const;
 
-    Task *addPeriodicTask(IExecutable *executable, absolute_time_t firstExecutionTime, uint64_t period);
+    Task *addPeriodicTask(IExecutable *executable, absolute_time_t firstExecutionTime, uint64_t period) const;
 
-    void run();
+    void run() const;
 };

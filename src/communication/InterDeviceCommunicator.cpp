@@ -12,8 +12,8 @@ void InterDeviceCommunicator::tick() {
     }
 }
 
-InterDeviceCommunicator::InterDeviceCommunicator(uart_inst *uart, uint8_t txPin, uint8_t rxPin)
-        : uart(uart), inputBuffer(), outputBuffer() {
+InterDeviceCommunicator::InterDeviceCommunicator(uart_inst *uart, const uint8_t txPin, const uint8_t rxPin)
+        : uart(uart) {
     gpio_set_function(txPin, GPIO_FUNC_UART);
     gpio_set_function(rxPin, GPIO_FUNC_UART);
 
@@ -26,21 +26,21 @@ void InterDeviceCommunicator::execute(absolute_time_t timestamp) {
     tick();
 }
 
-void InterDeviceCommunicator::send(uint8_t data) {
+void InterDeviceCommunicator::send(const uint8_t data) {
     outputBuffer.push_back(data);
     tick();
 }
 
-uint8_t InterDeviceCommunicator::peek() {
+uint8_t InterDeviceCommunicator::peek() const {
     while (inputBuffer.empty()) {
         sleep_us(100);
     }
-    unsigned char &data = inputBuffer.front();
+    const unsigned char &data = inputBuffer.front();
     return data;
 }
 
 uint8_t InterDeviceCommunicator::receive() {
-    uint8_t data = peek();
+    const uint8_t data = peek();
     inputBuffer.pop_front();
     return data;
 }

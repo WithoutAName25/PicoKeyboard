@@ -4,7 +4,7 @@
 #include "tusb.h"
 #include "../usb_descriptors.h"
 
-class HIDGamepad : public HIDController<hid_gamepad_report_t, REPORT_ID_GAMEPAD> {
+class HIDGamepad final : public HIDController<hid_gamepad_report_t, REPORT_ID_GAMEPAD> {
 public:
     bool hasReport() override;
 

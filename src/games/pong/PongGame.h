@@ -4,7 +4,6 @@
 #include "rotary_encoder.h"
 
 class PongGame {
-private:
     struct Vector {
         int x{};
         int y{};
@@ -25,23 +24,23 @@ private:
     State currentState;
     State oldState;
 
-    void drawState(State state, uint16_t color);
+    void drawState(const State& state, uint16_t color) const;
 
-    void updatePosition(RotaryEncoder *enc, int32_t &lastRotation, int &pos);
+    void updatePosition(const RotaryEncoder *enc, int32_t &lastRotation, int &pos) const;
 
     void updateBall();
 
 public:
     PongGame(RotaryEncoder *left, RotaryEncoder *right, LCDGraphics *display);
 
-    inline void init() {
+    void init() {
         display->clear(0);
         reset();
     }
 
     void update();
 
-    void draw();
+    void draw() const;
 
     void reset();
 };

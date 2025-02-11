@@ -57,7 +57,7 @@ void UnicodeAction::execute(absolute_time_t timestamp) {
     hidKeyboard.addCustomReport(&emptyReport);
 }
 
-[[maybe_unused]] UnicodeAction::UnicodeAction(uint32_t unicode) : reports() {
+[[maybe_unused]] UnicodeAction::UnicodeAction(const uint32_t unicode) : reports() {
     for (int i = 0; i < UnicodeLength; ++i) {
         reports[i] = {
                 0,
@@ -67,7 +67,7 @@ void UnicodeAction::execute(absolute_time_t timestamp) {
     }
 }
 
-void UnicodeAction::execute(uint8_t keyId, KeyState *state, absolute_time_t timestamp) {
+void UnicodeAction::execute(uint8_t keyId, const KeyState* state, const absolute_time_t timestamp) {
     hidKeyboard.addCustomReport(&emptyReport);
     hidKeyboard.addCustomReport(&initReport);
     hidKeyboard.addCustomReport(&emptyReport);

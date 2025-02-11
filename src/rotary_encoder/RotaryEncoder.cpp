@@ -9,10 +9,10 @@ void RotaryEncoder::init() const {
     gpio_set_irq_enabled(pinB, GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true);
 }
 
-void RotaryEncoder::callback(uint gpio) {
+void RotaryEncoder::callback(const uint gpio) {
     if (lastChange) {
         if (gpio == pinA) {
-            bool stateB = gpio_get(pinB);
+            const bool stateB = gpio_get(pinB);
             if (state == stateB) {
 //                if (rotation < 255)
                 rotation++;
@@ -25,7 +25,7 @@ void RotaryEncoder::callback(uint gpio) {
         }
     } else {
         if (gpio == pinB) {
-            bool stateA = gpio_get(pinA);
+            const bool stateA = gpio_get(pinA);
             if (state == stateA) {
 //                if (rotation > 0)
                 rotation--;

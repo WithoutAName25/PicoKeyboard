@@ -22,14 +22,13 @@ struct KeyPressState {
     absolute_time_t activation;
     bool reported;
 
-    KeyPressState(uint8_t keycode, uint8_t count, absolute_time_t activation)
+    KeyPressState(const uint8_t keycode, const uint8_t count, const absolute_time_t activation)
             : keycode(keycode), count(count), activation(activation), reported(false) {}
 };
 
 using KeyBlockingReference = std::list<absolute_time_t>::iterator;
 
-class HIDKeyboard : public HIDController<hid_keyboard_report_t, REPORT_ID_KEYBOARD> {
-private:
+class HIDKeyboard final : public HIDController<hid_keyboard_report_t, REPORT_ID_KEYBOARD> {
     uint8_t modifierPressCounts[8] = {};
     std::vector<KeyPressState> keyPressStates;
     std::list<absolute_time_t> blockingTimes;

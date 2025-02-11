@@ -3,7 +3,7 @@
 
 extern HIDKeyboard hidKeyboard;
 
-[[maybe_unused]] ModifierAction::ModifierAction(Modifier modifier) : modifier(modifier) {}
+[[maybe_unused]] ModifierAction::ModifierAction(const Modifier modifier) : modifier(modifier) {}
 
 void ModifierAction::press(absolute_time_t timestamp) {
     hidKeyboard.pressModifier(modifier);

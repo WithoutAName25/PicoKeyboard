@@ -6,20 +6,20 @@ void rgb_init(PIO pio, uint pin);
 
 void rgb_put_pixel(uint32_t pixel_grbw);
 
-static inline uint32_t colorRGB(uint8_t red, uint8_t green, uint8_t blue) {
+static uint32_t colorRGB(const uint8_t red, const uint8_t green, const uint8_t blue) {
     return green << 24 | red << 16 | blue << 8;
 }
 
-static inline uint32_t colorRGBW(uint8_t red, uint8_t green, uint8_t blue, uint8_t white) {
+static uint32_t colorRGBW(const uint8_t red, const uint8_t green, const uint8_t blue, const uint8_t white) {
     return green << 24 | red << 16 | blue << 8 | white;
 }
 
-static inline uint32_t colorRGBf(float red, float green, float blue) {
-    return colorRGB((uint8_t) red * 255, (uint8_t) green * 255, (uint8_t) blue * 255);
+static uint32_t colorRGBf(const float red, const float green, const float blue) {
+    return colorRGB(static_cast<uint8_t>(red) * 255, static_cast<uint8_t>(green) * 255, static_cast<uint8_t>(blue) * 255);
 }
 
-static inline uint32_t colorRGBWf(float red, float green, float blue, float white) {
-    return colorRGBW((uint8_t) red * 255, (uint8_t) green * 255, (uint8_t) blue * 255, (uint8_t) white * 255);
+static uint32_t colorRGBWf(const float red, const float green, const float blue, const float white) {
+    return colorRGBW(static_cast<uint8_t>(red) * 255, static_cast<uint8_t>(green) * 255, static_cast<uint8_t>(blue) * 255, static_cast<uint8_t>(white) * 255);
 }
 
 uint32_t colorHSV(uint16_t hue, float saturation, float value);

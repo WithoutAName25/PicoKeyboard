@@ -4,8 +4,7 @@
 #include "PressReleaseAction.h"
 #include "../KeyActionController.h"
 
-class [[maybe_unused]] OverlayLayerAction : public PressReleaseAction {
-private:
+class [[maybe_unused]] OverlayLayerAction final : public PressReleaseAction {
     KeyLayer &layer;
     OverlayLayerReference reference;
 

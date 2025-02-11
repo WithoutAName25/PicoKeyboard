@@ -4,8 +4,7 @@
 #include "pico/stdlib.h"
 #include "util.h"
 
-class InterDeviceCommunicator : public IExecutable {
-private:
+class InterDeviceCommunicator final : public IExecutable {
     uart_inst_t *uart;
     std::list<uint8_t> inputBuffer;
     std::list<uint8_t> outputBuffer;
@@ -19,7 +18,7 @@ public:
 
     void send(uint8_t data);
 
-    uint8_t peek();
+    [[nodiscard]] uint8_t peek() const;
 
     uint8_t receive();
 

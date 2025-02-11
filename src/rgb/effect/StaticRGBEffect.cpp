@@ -1,6 +1,6 @@
 #include "StaticRGBEffect.h"
 
-StaticRGBEffect::StaticRGBEffect(uint32_t colorGRBW) {
+StaticRGBEffect::StaticRGBEffect(const uint32_t colorGRBW) {
     color = colorGRBW;
 }
 

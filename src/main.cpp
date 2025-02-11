@@ -3,7 +3,6 @@
 #include "keys.h"
 #include "rgb.h"
 #include "rgb_effects.h"
-#include "rotary_encoder.h"
 #include "main.h"
 
 #ifdef KEYBOARD_PRIMARY
@@ -20,9 +19,9 @@ bool isPrimary = false;
 
 PicoKeyboardConfig config = getKeyboardConfig();
 
-PicoKeyboardDeviceConfig &deviceConfig = isPrimary ? config.primary : config.secondary;
+PicoKeyboardDeviceConfig& deviceConfig = isPrimary ? config.primary : config.secondary;
 
-DisplayConfig &display = deviceConfig.display;
+DisplayConfig& display = deviceConfig.display;
 
 HardwareSPIInterface lcd_spi(display.spiInst, display.dataPin, display.clockPin,
                              display.chipSelectPin, display.dataCommandPin);
@@ -59,20 +58,20 @@ HIDCommunication hidCommunication;
 TUDTask tudTask;
 #endif
 
-//void interrupt_callback(uint gpio, uint32_t events) {
-//    enc0.callback(gpio);
-//    enc1.callback(gpio);
-//}
+// void interrupt_callback(uint gpio, uint32_t events) {
+//     enc0.callback(gpio);
+//     enc1.callback(gpio);
+// }
 
 void initEncoder() {
-//    irq_set_enabled(IO_IRQ_BANK0, true);
-//    gpio_set_irq_callback(interrupt_callback);
-//    enc0.init();
-//    enc1.init();
+    // irq_set_enabled(IO_IRQ_BANK0, true);
+    // gpio_set_irq_callback(interrupt_callback);
+    // enc0.init();
+    // enc1.init();
 }
 
 int main() {
-//    stdio_init_all();
+    // stdio_init_all();
     initEncoder();
 
     rgb_init(pio0, deviceConfig.ledPin);
@@ -102,9 +101,10 @@ int main() {
     scheduler.addPeriodicTask(&hidCommunication, get_absolute_time(), 10000);
 #endif
 
-//    rgbController.setEffect(KeyStateEffect(RainbowWaveEffect(), 3000));
-    rgbController.setEffect(RainbowWaveEffect());
-//    rgbController.setEffect(StaticRGBEffect(colorRGB(0, 0, 255)));
+    // rgbController.setEffect(KeyStateEffect(RainbowWaveEffect(), 3000));
+    RainbowWaveEffect rainbowWaveEffect;
+    rgbController.setEffect(&rainbowWaveEffect);
+    // rgbController.setEffect(StaticRGBEffect(colorRGB(0, 0, 255)));
 
     scheduler.run();
 

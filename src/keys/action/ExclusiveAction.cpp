@@ -1,31 +1,37 @@
 #include "ExclusiveAction.h"
 
+#include "util.h"
+
 extern KeyStateController keyStateController;
 extern Scheduler scheduler;
 
-const uint64_t MIN_HOLD_TIME_US = 10000;
-
-void ExclusiveAction::onKeyStateChange(uint8_t keyId, KeyState &state, absolute_time_t timestamp) {
+void ExclusiveAction::onKeyStateChange(const uint8_t keyId, const KeyState& state, const absolute_time_t timestamp) {
     if (activatedBy == keyId && !state.isPressed) {
-        if (timestamp < activationTimestamp + MIN_HOLD_TIME_US) {
-            scheduler.addTask(this, activationTimestamp + MIN_HOLD_TIME_US);
-        } else {
+        if (isActionActive) {
             action->release(timestamp);
+            isActionActive = false;
         }
         keyStateController.removeKeyStateListener(listenerReference);
-    } else if (keySet.contains(keyId) && state.isPressed) {
-        action->release(timestamp);
-        keyStateController.removeKeyStateListener(listenerReference);
+    } else if (keySet.contains(keyId)) {
+        if (state.isPressed) {
+            if (isActionActive) {
+                action->release(timestamp);
+                isActionActive = false;
+            }
+        } else if (!isActionActive) {
+            for (const uint8_t key : keySet) {
+                if (keyStateController.getKeyState(key).isPressed) return;
+            }
+            action->press(timestamp);
+            isActionActive = true;
+        }
     }
 }
 
-void ExclusiveAction::execute(absolute_time_t timestamp) {
-    action->release(timestamp);
-}
-
-void ExclusiveAction::execute(uint8_t keyId, KeyState *state, absolute_time_t timestamp) {
+void ExclusiveAction::execute(const uint8_t keyId, const KeyState* state, const absolute_time_t timestamp) {
     activatedBy = keyId;
     activationTimestamp = timestamp;
     action->press(timestamp);
+    isActionActive = true;
     listenerReference = keyStateController.addKeyStateListener(this);
 }

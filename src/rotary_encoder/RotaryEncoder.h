@@ -3,7 +3,6 @@
 #include "pico/stdlib.h"
 
 class RotaryEncoder {
-private:
     uint pinA;
     uint pinB;
     int32_t rotation = 0;
@@ -12,7 +11,7 @@ private:
 
 public:
 
-    RotaryEncoder(uint pinA, uint pinB) : pinA(pinA), pinB(pinB) {}
+    RotaryEncoder(const uint pinA, const uint pinB) : pinA(pinA), pinB(pinB) {}
 
     void init() const;
 

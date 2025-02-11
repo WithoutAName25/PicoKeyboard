@@ -3,8 +3,7 @@
 #include "PressReleaseAction.h"
 #include "usb.h"
 
-class [[maybe_unused]] ModifierAction : public PressReleaseAction {
-private:
+class [[maybe_unused]] ModifierAction final : public PressReleaseAction {
     Modifier modifier;
 
 public:

@@ -2,8 +2,7 @@
 
 #include "IRGBEffect.h"
 
-class StaticRGBEffect : public IRGBEffect {
-private:
+class StaticRGBEffect final : public IRGBEffect {
     uint32_t color;
 public:
     explicit StaticRGBEffect(uint32_t colorGRBW);

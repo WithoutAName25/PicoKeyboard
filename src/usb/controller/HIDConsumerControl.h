@@ -3,7 +3,7 @@
 #include "HIDController.h"
 #include "../usb_descriptors.h"
 
-class HIDConsumerControl : public HIDController<uint16_t, REPORT_ID_CONSUMER_CONTROL> {
+class HIDConsumerControl final : public HIDController<uint16_t, REPORT_ID_CONSUMER_CONTROL> {
     std::queue<uint16_t> queue;
     bool lastReportEmpty = false;
 
