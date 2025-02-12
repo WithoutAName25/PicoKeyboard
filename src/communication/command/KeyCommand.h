@@ -8,7 +8,7 @@ class KeyCommand final : public Command {
     uint8_t keyId;
 
 public:
-    static constexpr uint16_t ID = 1;
+    static constexpr uint16_t ID = 0b10;
 
     KeyCommand(bool isPressed, uint8_t keyId);
 

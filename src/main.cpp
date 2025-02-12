@@ -38,11 +38,7 @@ CommandController commandController(interDeviceCommunicator, isPrimary);
 
 RGBController rgbController(deviceConfig.leds, deviceConfig.numLEDs);
 
-#ifdef KEYBOARD_PRIMARY
 KeyStateController keyStateController(config.totalNumKeys);
-#elif defined(KEYBOARD_SECONDARY)
-SecondaryKeyStateController keyStateController(config.totalNumKeys);
-#endif
 
 KeyListener keyListener(keyStateController, deviceConfig.hwKeys, deviceConfig.numHwKeys);
 

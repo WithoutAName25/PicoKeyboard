@@ -18,6 +18,6 @@ void KeyListener::execute(const absolute_time_t timestamp) {
     for (int i = 0; i < numKeys; ++i) {
         const HWKeyConfig &key = keys[i];
         const bool isPressed = !gpio_get(key.pin);
-        controller.updateKeyState(key.id, isPressed, timestamp);
+        controller.updateKeyState(key.id, isPressed, timestamp, true);
     }
 }

@@ -16,7 +16,7 @@ class CommandController final : public IExecutable {
     std::unordered_map<uint16_t, CommandCreator> commandMap;
 
     template <DerivedFromCommand Cmd>
-    void registerCommand() {
+    void listenFor() {
         commandMap[Cmd::ID] = [](InterDeviceCommunicator& comm) {
             return std::make_unique<Cmd>(comm);
         };

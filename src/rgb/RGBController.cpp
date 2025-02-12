@@ -13,6 +13,7 @@ void RGBController::write() const {
 }
 
 void RGBController::execute(const absolute_time_t timestamp) {
+    if (currentEffect != nullptr) currentEffect->update(timestamp);
     for (int i = 0; i < numLEDs; ++i) {
         LedConfig &ledConfig = ledConfigs[i];
         if (currentEffect == nullptr) {
@@ -26,9 +27,10 @@ void RGBController::execute(const absolute_time_t timestamp) {
 
 RGBController::RGBController(LedConfig *ledConfigs, const uint8_t numLEDs)
         : ledConfigs(ledConfigs), numLEDs(numLEDs), data(new uint32_t[numLEDs]), currentEffect(nullptr) {
-
 }
 
 void RGBController::setEffect(IRGBEffect* effect) {
+    if (currentEffect != nullptr) currentEffect->disable();
     currentEffect = effect;
+    if (currentEffect != nullptr) currentEffect->enable();
 }

@@ -40,7 +40,7 @@ public:
 
     virtual ~KeyStateController() = default;
 
-    virtual void updateKeyState(uint8_t keyId, bool isPressed, absolute_time_t timestamp);
+    virtual void updateKeyState(uint8_t keyId, bool isPressed, absolute_time_t timestamp, bool localKey);
 
     KeyState& getKeyState(uint8_t keyId);
 
