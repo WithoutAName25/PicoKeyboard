@@ -1,13 +1,6 @@
 #include "CommandController.h"
 #include "command/KeyCommand.h"
-
-CommandController::CommandController(InterDeviceCommunicator& communicator, const bool isPrimary) : communicator(
-    communicator) {
-    listenFor<KeyCommand>();
-    // if (isPrimary) {
-    // } else {
-    // }
-}
+#include "command/RGBEffectCommand.h"
 
 void CommandController::execute(const absolute_time_t timestamp) {
     while (communicator.hasData()) {
@@ -26,5 +19,14 @@ void CommandController::execute(const absolute_time_t timestamp) {
         if (!successful) {
             communicator.receive();
         }
+    }
+}
+
+CommandController::CommandController(InterDeviceCommunicator& communicator, const bool isPrimary) : communicator(
+    communicator) {
+    listenFor<KeyCommand>();
+    if (isPrimary) {
+    } else {
+        listenFor<RGBEffectCommand>();
     }
 }

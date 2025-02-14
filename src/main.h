@@ -82,15 +82,19 @@ struct PicoKeyboardConfig {
 
     void (*configureKeys)(KeyActionController&);
 
+    bool isMirrored;
+
     PicoKeyboardDeviceConfig primary;
     PicoKeyboardDeviceConfig secondary;
 
     PicoKeyboardConfig(uint8_t totalNumKeys,
                        void (*configureKeys)(KeyActionController&),
+                       bool isMirrored,
                        PicoKeyboardDeviceConfig primary,
                        PicoKeyboardDeviceConfig secondary)
         : totalNumKeys(totalNumKeys),
           configureKeys(configureKeys),
+          isMirrored(isMirrored),
           primary(primary),
           secondary(secondary) {}
 };

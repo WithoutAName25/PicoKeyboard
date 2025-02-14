@@ -22,6 +22,8 @@ class CommandController final : public IExecutable {
         };
     }
 
+    void execute(absolute_time_t timestamp) override;
+
 public:
     CommandController(InterDeviceCommunicator& communicator, bool isPrimary);
 
@@ -30,6 +32,4 @@ public:
         Cmd cmd(std::forward<Args>(args)...);
         cmd.send(communicator);
     }
-
-    void execute(absolute_time_t timestamp) override;
 };

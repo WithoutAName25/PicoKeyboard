@@ -4,8 +4,13 @@
 
 class StaticRGBEffect final : public IRGBEffect {
     uint32_t color;
+
+    void serialize(InterDeviceCommunicator& communicator) override;
+
+    uint32_t getColor(LedConfig& led, absolute_time_t timestamp) override;
+
 public:
     explicit StaticRGBEffect(uint32_t colorGRBW);
 
-    uint32_t getColor(LedConfig &led, absolute_time_t timestamp) override;
+    explicit StaticRGBEffect(InterDeviceCommunicator& communicator);
 };

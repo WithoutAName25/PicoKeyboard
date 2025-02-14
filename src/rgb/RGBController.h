@@ -1,15 +1,16 @@
 #pragma once
 
 #include <memory>
+#include <util.h>
 #include "pico/stdlib.h"
 #include "effect/IRGBEffect.h"
-#include "../util/Scheduler.h"
 
 class RGBController final : public IExecutable {
-    LedConfig *ledConfigs;
+    LedConfig* ledConfigs;
+    LedConfig* mirroredLeds;
     uint8_t numLEDs;
     std::unique_ptr<uint32_t[]> data;
-    IRGBEffect* currentEffect;
+    std::shared_ptr<IRGBEffect> currentEffect;
 
     void setPixel(uint8_t hwNumber, uint32_t colorGRBW);
 
@@ -18,7 +19,7 @@ class RGBController final : public IExecutable {
     void execute(absolute_time_t timestamp) override;
 
 public:
-    explicit RGBController(LedConfig *ledConfigs, uint8_t numLEDs);
+    RGBController(LedConfig* ledConfigs, LedConfig* mirroredLeds, uint8_t numLEDs);
 
-    void setEffect(IRGBEffect* effect);
+    void setEffect(const std::shared_ptr<IRGBEffect>& effect);
 };

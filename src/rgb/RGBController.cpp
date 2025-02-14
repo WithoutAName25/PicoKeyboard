@@ -15,7 +15,7 @@ void RGBController::write() const {
 void RGBController::execute(const absolute_time_t timestamp) {
     if (currentEffect != nullptr) currentEffect->update(timestamp);
     for (int i = 0; i < numLEDs; ++i) {
-        LedConfig &ledConfig = ledConfigs[i];
+        LedConfig& ledConfig = ledConfigs[i];
         if (currentEffect == nullptr) {
             setPixel(ledConfig.hwNumber, 0);
         } else {
@@ -25,12 +25,12 @@ void RGBController::execute(const absolute_time_t timestamp) {
     write();
 }
 
-RGBController::RGBController(LedConfig *ledConfigs, const uint8_t numLEDs)
-        : ledConfigs(ledConfigs), numLEDs(numLEDs), data(new uint32_t[numLEDs]), currentEffect(nullptr) {
-}
+RGBController::RGBController(LedConfig* ledConfigs, LedConfig* mirroredLeds, const uint8_t numLEDs)
+    : ledConfigs(ledConfigs), mirroredLeds(mirroredLeds), numLEDs(numLEDs), data(new uint32_t[numLEDs]),
+      currentEffect(nullptr) {}
 
-void RGBController::setEffect(IRGBEffect* effect) {
+void RGBController::setEffect(const std::shared_ptr<IRGBEffect>& effect) {
     if (currentEffect != nullptr) currentEffect->disable();
     currentEffect = effect;
-    if (currentEffect != nullptr) currentEffect->enable();
+    if (currentEffect != nullptr) currentEffect->enable(ledConfigs, mirroredLeds, numLEDs);
 }

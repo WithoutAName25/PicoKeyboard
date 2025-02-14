@@ -20,6 +20,7 @@ bool isPrimary = false;
 PicoKeyboardConfig config = getKeyboardConfig();
 
 PicoKeyboardDeviceConfig& deviceConfig = isPrimary ? config.primary : config.secondary;
+PicoKeyboardDeviceConfig& otherDeviceConfig = isPrimary ? config.secondary : config.primary;
 
 DisplayConfig& display = deviceConfig.display;
 
@@ -36,7 +37,7 @@ InterDeviceCommunicator interDeviceCommunicator(deviceConfig.uart, deviceConfig.
 
 CommandController commandController(interDeviceCommunicator, isPrimary);
 
-RGBController rgbController(deviceConfig.leds, deviceConfig.numLEDs);
+RGBController rgbController(deviceConfig.leds, config.isMirrored ? otherDeviceConfig.leds : nullptr, deviceConfig.numLEDs);
 
 KeyStateController keyStateController(config.totalNumKeys);
 
@@ -98,8 +99,7 @@ int main() {
 #endif
 
     // rgbController.setEffect(KeyStateEffect(RainbowWaveEffect(), 3000));
-    RainbowWaveEffect rainbowWaveEffect;
-    rgbController.setEffect(&rainbowWaveEffect);
+    rgbController.setEffect(std::make_shared<RainbowWaveEffect>());
     // rgbController.setEffect(StaticRGBEffect(colorRGB(0, 0, 255)));
 
     scheduler.run();

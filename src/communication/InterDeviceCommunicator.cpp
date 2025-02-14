@@ -12,8 +12,8 @@ void InterDeviceCommunicator::tick() {
     }
 }
 
-InterDeviceCommunicator::InterDeviceCommunicator(uart_inst *uart, const uint8_t txPin, const uint8_t rxPin)
-        : uart(uart) {
+InterDeviceCommunicator::InterDeviceCommunicator(uart_inst* uart, const uint8_t txPin, const uint8_t rxPin)
+    : uart(uart) {
     gpio_set_function(txPin, GPIO_FUNC_UART);
     gpio_set_function(rxPin, GPIO_FUNC_UART);
 
@@ -31,17 +31,59 @@ void InterDeviceCommunicator::send(const uint8_t data) {
     tick();
 }
 
-uint8_t InterDeviceCommunicator::peek() const {
+void InterDeviceCommunicator::send(uint8_t* data, size_t size) {
+    outputBuffer.insert(outputBuffer.end(), data, data + size);
+    tick();
+}
+
+void InterDeviceCommunicator::send16(uint16_t data) {
+    send(reinterpret_cast<uint8_t*>(&data), sizeof(data));
+}
+
+void InterDeviceCommunicator::send32(uint32_t data) {
+    send(reinterpret_cast<uint8_t*>(&data), sizeof(data));
+}
+
+void InterDeviceCommunicator::send64(uint64_t data) {
+    send(reinterpret_cast<uint8_t*>(&data), sizeof(data));
+}
+
+uint8_t InterDeviceCommunicator::peek() {
     while (inputBuffer.empty()) {
-        sleep_us(100);
+        sleep_us(10);
+        tick();
     }
-    const unsigned char &data = inputBuffer.front();
+    const unsigned char& data = inputBuffer.front();
     return data;
 }
 
 uint8_t InterDeviceCommunicator::receive() {
     const uint8_t data = peek();
     inputBuffer.pop_front();
+    return data;
+}
+
+void InterDeviceCommunicator::receive(uint8_t* buf, size_t size) {
+    for (size_t i = 0; i < size; i++) {
+        buf[i] = receive();
+    }
+}
+
+uint16_t InterDeviceCommunicator::receive16() {
+    uint16_t data;
+    receive(reinterpret_cast<uint8_t*>(&data), sizeof(data));
+    return data;
+}
+
+uint32_t InterDeviceCommunicator::receive32() {
+    uint32_t data;
+    receive(reinterpret_cast<uint8_t*>(&data), sizeof(data));
+    return data;
+}
+
+uint64_t InterDeviceCommunicator::receive64() {
+    uint64_t data;
+    receive(reinterpret_cast<uint8_t*>(&data), sizeof(data));
     return data;
 }
 

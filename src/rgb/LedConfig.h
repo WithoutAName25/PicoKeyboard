@@ -1,7 +1,5 @@
 #pragma once
 
-#include "pico/stdlib.h"
-
 struct LedConfig {
     uint8_t hwNumber;
     uint8_t id;
