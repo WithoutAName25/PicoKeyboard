@@ -7,7 +7,6 @@ using OverlayLayerReference = std::list<KeyLayer *>::iterator;
 
 class KeyActionController final : IKeyStateListener {
     KeyStateController &keyStateController;
-    std::list<KeyLayer> layers;
     uint8_t numKeys;
     KeyLayer *currentBaseLayer;
     std::list<KeyLayer *> activeOverlayLayers;
@@ -16,8 +15,6 @@ class KeyActionController final : IKeyStateListener {
 
 public:
     KeyActionController(uint8_t numKeys, KeyStateController &keyStateController);
-
-    KeyLayer &addLayer();
 
     void switchBaseLayer(KeyLayer &layer);
 

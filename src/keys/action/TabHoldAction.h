@@ -42,7 +42,8 @@ class TabHoldAction final : public IKeyAction, IExecutable, IKeyStateListener {
 
 public:
     template <KeyActionType T0, KeyActionType T1>
-    TabHoldAction(T0 tabAction, T1 holdAction, uint64_t tabTimeout, uint64_t holdTimeout, uint64_t tabHoldTimeout, bool holdOnPressRelease = false, bool blockOtherKeys = false)
+    TabHoldAction(T0 tabAction, T1 holdAction, uint64_t tabTimeout, uint64_t holdTimeout, uint64_t tabHoldTimeout,
+                  bool holdOnPressRelease = false, bool blockOtherKeys = false)
         : TabHoldAction(std::make_unique<T0>(std::move(tabAction)),
                         std::make_unique<T1>(std::move(holdAction)),
                         tabTimeout,
@@ -50,23 +51,6 @@ public:
                         tabHoldTimeout,
                         holdOnPressRelease,
                         blockOtherKeys) {}
-
-    template <KeyActionType T0, KeyActionType T1>
-    [[maybe_unused]] TabHoldAction(T0 tabAction, T1 holdAction, uint64_t timeout, uint64_t tabHoldTimeout)
-        : TabHoldAction(tabAction, holdAction, timeout, timeout, tabHoldTimeout) {}
-
-    template <KeyActionType T0, KeyActionType T1>
-    [[maybe_unused]] TabHoldAction(T0 tabAction, T1 holdAction, uint64_t timeout)
-        : TabHoldAction(tabAction, holdAction, timeout, timeout, timeout) {}
-
-    TabHoldAction(uint8_t keycode, Modifier modifier, const uint64_t timeout, const uint64_t tabHoldTimeout)
-        : TabHoldAction(std::make_unique<KeyAction>(keycode),
-                        std::make_unique<ModifierAction>(modifier),
-                        timeout,
-                        timeout,
-                        tabHoldTimeout,
-                        true,
-                        true) {}
 
     void execute(uint8_t keyId, const KeyState* state, absolute_time_t timestamp) override;
 };

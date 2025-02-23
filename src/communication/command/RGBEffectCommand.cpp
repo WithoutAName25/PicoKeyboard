@@ -14,6 +14,6 @@ RGBEffectCommand::RGBEffectCommand(InterDeviceCommunicator& communicator) {
 }
 
 void RGBEffectCommand::send(InterDeviceCommunicator& communicator) {
-    communicator.send(ID);
+    communicator.send(ID & 0xFF);
     effect->serialize(communicator);
 }

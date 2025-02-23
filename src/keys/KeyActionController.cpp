@@ -17,11 +17,6 @@ KeyActionController::KeyActionController(const uint8_t numKeys, KeyStateControll
     keyStateController.addKeyStateListener(this);
 }
 
-KeyLayer& KeyActionController::addLayer() {
-    layers.emplace_back(numKeys);
-    return layers.back();
-}
-
 void KeyActionController::switchBaseLayer(KeyLayer& layer) {
     currentBaseLayer = &layer;
 }
