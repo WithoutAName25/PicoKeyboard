@@ -10,7 +10,8 @@ void KeyStateEffect::serialize(InterDeviceCommunicator& communicator) {
     IRGBEffect::serialize(communicator);
     communicator.send64(fadeOutMs);
     communicator.send(mirrored);
-    colorEffect->serialize(communicator);
+    inactiveEffect->serialize(communicator);
+    activeEffect->serialize(communicator);
 }
 
 uint64_t KeyStateEffect::getTimeSinceRelease(const uint8_t keyId, const absolute_time_t timestamp) {
@@ -23,8 +24,8 @@ uint64_t KeyStateEffect::getTimeSinceRelease(const uint8_t keyId, const absolute
     return timestamp - state.releaseTime;
 }
 
-uint32_t KeyStateEffect::getColor(LedConfig& led, const absolute_time_t timestamp) {
-    if (!led.isKeyLed) return 0;
+Color KeyStateEffect::getColor(LedConfig& led, const absolute_time_t timestamp) {
+    if (!led.isKeyLed) return Color::Black();
 
     uint64_t sinceRelease = getTimeSinceRelease(led.associatedKeyId, timestamp);
     if (mirrored) {
@@ -36,10 +37,12 @@ uint32_t KeyStateEffect::getColor(LedConfig& led, const absolute_time_t timestam
         }
     }
 
-    if (sinceRelease >= fadeOutMs * 1000) return 0;
+    if (sinceRelease >= fadeOutMs * 1000) return inactiveEffect->getColor(led, timestamp);
 
     const float fadeAmount = static_cast<float>(sinceRelease) / static_cast<float>(fadeOutMs * 1000);
-    return brightness(colorEffect->getColor(led, timestamp), 1 - fadeAmount);
+    const Color inactive = inactiveEffect->getColor(led, timestamp);
+    const Color active = activeEffect->getColor(led, timestamp);
+    return Color::interpolate(active, inactive, fadeAmount);
 }
 
 void KeyStateEffect::enable(LedConfig* leds, LedConfig* mirroredLeds, const uint8_t numLEDs) {
@@ -57,5 +60,6 @@ void KeyStateEffect::enable(LedConfig* leds, LedConfig* mirroredLeds, const uint
 KeyStateEffect::KeyStateEffect(InterDeviceCommunicator& communicator): IRGBEffect(EffectType::KEY_STATE) {
     fadeOutMs = communicator.receive64();
     mirrored = communicator.receive();
-    colorEffect = create(communicator);
+    inactiveEffect = create(communicator);
+    activeEffect = create(communicator);
 }

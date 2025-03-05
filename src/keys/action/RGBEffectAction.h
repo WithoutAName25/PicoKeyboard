@@ -12,6 +12,6 @@ public:
 
     template <RGBEffectType T>
     explicit RGBEffectAction(T effect) {
-        this->effect = std::make_shared<T>(effect);
+        this->effect = std::make_shared<T>(std::move(effect));
     }
 };

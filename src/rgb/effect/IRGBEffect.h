@@ -2,6 +2,8 @@
 
 #include <memory>
 #include <pico/stdlib.h>
+
+#include "../Color.h"
 #include "../LedConfig.h"
 
 class InterDeviceCommunicator;
@@ -9,7 +11,8 @@ class InterDeviceCommunicator;
 enum class EffectType: uint8_t {
     KEY_STATE,
     RAINBOW_WAVE,
-    STATIC_RGB
+    STATIC_RGB,
+    HEATMAP
 };
 
 class IRGBEffect {
@@ -31,7 +34,7 @@ public:
 
     virtual void update(absolute_time_t timestamp) {}
 
-    virtual uint32_t getColor(LedConfig& led, absolute_time_t timestamp) = 0;
+    virtual Color getColor(LedConfig& led, absolute_time_t timestamp) = 0;
 };
 
 template <typename T>

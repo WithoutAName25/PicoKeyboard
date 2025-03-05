@@ -4,15 +4,14 @@
 
 void StaticRGBEffect::serialize(InterDeviceCommunicator& communicator) {
     IRGBEffect::serialize(communicator);
-    communicator.send32(color);
+    color.serialize(communicator);
 }
 
-uint32_t StaticRGBEffect::getColor(LedConfig& led, absolute_time_t timestamp) {
+Color StaticRGBEffect::getColor(LedConfig& led, absolute_time_t timestamp) {
     return color;
 }
 
-StaticRGBEffect::StaticRGBEffect(const uint32_t colorGRBW) : IRGBEffect(EffectType::STATIC_RGB), color(colorGRBW) {}
+StaticRGBEffect::StaticRGBEffect(const Color& color) : IRGBEffect(EffectType::STATIC_RGB), color(color) {}
 
-StaticRGBEffect::StaticRGBEffect(InterDeviceCommunicator& communicator): IRGBEffect(EffectType::STATIC_RGB) {
-    color = communicator.receive32();
-}
+StaticRGBEffect::StaticRGBEffect(const InterDeviceCommunicator& communicator)
+    : IRGBEffect(EffectType::STATIC_RGB), color(Color(communicator)) {}

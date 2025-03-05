@@ -1,9 +1,13 @@
 #include "RGBController.h"
+
 #include "neopixel.h"
+#include "../../lib/LCDLibrary/utils.h"
 #include "effect/IRGBEffect.h"
 
-void RGBController::setPixel(const uint8_t hwNumber, const uint32_t colorGRBW) {
-    data[hwNumber] = colorGRBW;
+Color black = Color::Black();
+
+void RGBController::setPixel(const uint8_t hwNumber, Color &color) {
+    data[hwNumber] = color.toPixelFormat();
 }
 
 void RGBController::write() const {
@@ -17,9 +21,10 @@ void RGBController::execute(const absolute_time_t timestamp) {
     for (int i = 0; i < numLEDs; ++i) {
         LedConfig& ledConfig = ledConfigs[i];
         if (currentEffect == nullptr) {
-            setPixel(ledConfig.hwNumber, 0);
+            setPixel(ledConfig.hwNumber, black);
         } else {
-            setPixel(ledConfig.hwNumber, currentEffect->getColor(ledConfig, timestamp));
+            Color color = currentEffect->getColor(ledConfig, timestamp);
+            setPixel(ledConfig.hwNumber, color);
         }
     }
     write();

@@ -2,6 +2,8 @@
 
 #include <memory>
 #include <util.h>
+
+#include "Color.h"
 #include "pico/stdlib.h"
 #include "effect/IRGBEffect.h"
 
@@ -12,7 +14,7 @@ class RGBController final : public IExecutable {
     std::unique_ptr<uint32_t[]> data;
     std::shared_ptr<IRGBEffect> currentEffect;
 
-    void setPixel(uint8_t hwNumber, uint32_t colorGRBW);
+    void setPixel(uint8_t hwNumber, Color &color);
 
     void write() const;
 

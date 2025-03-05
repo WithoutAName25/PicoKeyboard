@@ -82,7 +82,7 @@ int main() {
     scheduler.addPeriodicTask(&keyListener, get_absolute_time(), 500);
     scheduler.addPeriodicTask(&interDeviceCommunicator, get_absolute_time(), 100);
     scheduler.addPeriodicTask(&commandController, get_absolute_time(), 100);
-    scheduler.addPeriodicTask(&rgbController, get_absolute_time(), 5000);
+    scheduler.addPeriodicTask(&rgbController, get_absolute_time(), 10000);
 
 #ifdef KEYBOARD_PRIMARY
     tud_init(BOARD_TUD_RHPORT);

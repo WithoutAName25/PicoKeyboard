@@ -3,14 +3,14 @@
 #include "IRGBEffect.h"
 
 class StaticRGBEffect final : public IRGBEffect {
-    uint32_t color;
+    Color color;
 
     void serialize(InterDeviceCommunicator& communicator) override;
 
-    uint32_t getColor(LedConfig& led, absolute_time_t timestamp) override;
+    Color getColor(LedConfig& led, absolute_time_t timestamp) override;
 
 public:
-    explicit StaticRGBEffect(uint32_t colorGRBW);
+    explicit StaticRGBEffect(const Color& color);
 
-    explicit StaticRGBEffect(InterDeviceCommunicator& communicator);
+    explicit StaticRGBEffect(const InterDeviceCommunicator& communicator);
 };

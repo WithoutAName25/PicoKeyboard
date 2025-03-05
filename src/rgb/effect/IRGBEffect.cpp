@@ -4,6 +4,7 @@
 #include "KeyStateEffect.h"
 #include "RainbowWaveEffect.h"
 #include "StaticRGBEffect.h"
+#include "HeatmapEffect.h"
 
 void IRGBEffect::serialize(InterDeviceCommunicator& communicator) {
     communicator.send(static_cast<uint8_t>(type));
@@ -17,6 +18,8 @@ std::shared_ptr<IRGBEffect> IRGBEffect::create(InterDeviceCommunicator& communic
         return std::make_shared<RainbowWaveEffect>(communicator);
     case EffectType::STATIC_RGB:
         return std::make_shared<StaticRGBEffect>(communicator);
+    case EffectType::HEATMAP:
+        return std::make_shared<HeatmapEffect>(communicator);
     }
-    return std::make_shared<StaticRGBEffect>(0x00FF0000); // RED as error effect
+    return std::make_shared<StaticRGBEffect>(Color::Red());
 }
