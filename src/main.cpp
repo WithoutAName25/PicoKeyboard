@@ -37,7 +37,8 @@ InterDeviceCommunicator interDeviceCommunicator(deviceConfig.uart, deviceConfig.
 
 CommandController commandController(interDeviceCommunicator, isPrimary);
 
-RGBController rgbController(deviceConfig.leds, config.isMirrored ? otherDeviceConfig.leds : nullptr, deviceConfig.numLEDs);
+RGBController rgbController(deviceConfig.leds, config.isMirrored ? otherDeviceConfig.leds : nullptr,
+                            deviceConfig.numLEDs);
 
 KeyStateController keyStateController(config.totalNumKeys);
 
@@ -98,9 +99,7 @@ int main() {
     scheduler.addPeriodicTask(&hidCommunication, get_absolute_time(), 10000);
 #endif
 
-    // rgbController.setEffect(KeyStateEffect(RainbowWaveEffect(), 3000));
-    rgbController.setEffect(std::make_shared<RainbowWaveEffect>());
-    // rgbController.setEffect(StaticRGBEffect(colorRGB(0, 0, 255)));
+    rgbController.setEffect(config.defaultEffect);
 
     scheduler.run();
 

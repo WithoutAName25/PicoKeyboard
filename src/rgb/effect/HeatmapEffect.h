@@ -8,7 +8,7 @@
 class HeatmapEffect final : public IRGBEffect, IExecutable {
     Color hot;
     Color cold;
-    uint32_t coolingRate;
+    float coolingFactor;
     uint32_t heatingOnPress;
     uint32_t heatingRateOnHold;
     bool mirrored;
@@ -17,7 +17,7 @@ class HeatmapEffect final : public IRGBEffect, IExecutable {
     uint8_t numLEDs = 0;
     std::map<uint8_t, uint8_t> inverseIdMap{};
     std::unique_ptr<uint64_t[]> heatMap = nullptr;
-    uint64_t maxHeat = 0;
+    float maxHeat = 0;
     Task* task = nullptr;
     absolute_time_t lastTick = 0;
 
@@ -34,8 +34,8 @@ class HeatmapEffect final : public IRGBEffect, IExecutable {
     [[nodiscard]] uint64_t getHeatDelta(uint8_t keyId) const;
 
 public:
-    HeatmapEffect(const Color& hot, const Color& cold, uint32_t coolingRate, uint32_t heatingOnPress,
-                  uint32_t heatingRateOnHold,
+    HeatmapEffect(const Color& hot, const Color& cold,
+                  float coolingFactor, uint32_t heatingOnPress, uint32_t heatingRateOnHold,
                   bool mirrored);
 
     explicit HeatmapEffect(InterDeviceCommunicator& communicator);

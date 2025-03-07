@@ -6,6 +6,8 @@
 #include <hardware/spi.h>
 #include <pico/stdlib.h>
 
+#include <utility>
+
 struct DisplayConfig {
     spi_inst* spiInst;
     uint8_t dataPin;
@@ -82,6 +84,8 @@ struct PicoKeyboardConfig {
 
     void (*configureKeys)(KeyActionController&);
 
+    std::shared_ptr<IRGBEffect> defaultEffect;
+
     bool isMirrored;
 
     PicoKeyboardDeviceConfig primary;
@@ -89,11 +93,13 @@ struct PicoKeyboardConfig {
 
     PicoKeyboardConfig(uint8_t totalNumKeys,
                        void (*configureKeys)(KeyActionController&),
+                       std::shared_ptr<IRGBEffect> defaultEffect,
                        bool isMirrored,
                        PicoKeyboardDeviceConfig primary,
                        PicoKeyboardDeviceConfig secondary)
         : totalNumKeys(totalNumKeys),
           configureKeys(configureKeys),
+          defaultEffect(std::move(defaultEffect)),
           isMirrored(isMirrored),
           primary(primary),
           secondary(secondary) {}
