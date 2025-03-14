@@ -8,6 +8,7 @@ class [[maybe_unused]] SingleUseOverlayLayerAction final : public IKeyAction, IK
     OverlayLayerReference reference;
     KeyStateListenerReference listenerReference;
     bool isActive = false;
+    absolute_time_t activationTimestamp = 0;
 
     void onKeyStateChange(uint8_t keyId, const KeyState& state, absolute_time_t timestamp) override;
 
