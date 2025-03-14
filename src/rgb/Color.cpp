@@ -78,20 +78,30 @@ void Color::setHSV(const uint16_t hue, const float saturation, const float value
 }
 
 Color::Color(InterDeviceCommunicator communicator) {
-    r = communicator.receive();
-    g = communicator.receive();
-    b = communicator.receive();
-    h = 0;
-    s = 0;
-    v = 0;
-    rgb_valid = true;
-    hsv_valid = false;
+    hsv_valid = communicator.receive();
+    rgb_valid = !hsv_valid;
+    if (hsv_valid) {
+        h = communicator.receive16();
+        s = communicator.receive() / 255.0f;
+        v = communicator.receive() / 255.0f;
+    } else {
+        r = communicator.receive();
+        g = communicator.receive();
+        b = communicator.receive();
+    }
 }
 
 void Color::serialize(InterDeviceCommunicator communicator) const {
-    communicator.send(r);
-    communicator.send(g);
-    communicator.send(b);
+    communicator.send(hsv_valid);
+    if (hsv_valid) {
+        communicator.send16(h);
+        communicator.send(s*255);
+        communicator.send(v*255);
+    } else {
+        communicator.send(r);
+        communicator.send(g);
+        communicator.send(b);
+    }
 }
 
 uint32_t Color::toPixelFormat() {
