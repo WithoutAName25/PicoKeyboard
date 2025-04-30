@@ -1,84 +1,55 @@
 #include "PicoKeyboard.h"
 
-void configureKeys(KeyActionController &keyActionController) {
-#ifdef KEYBOARD_PRIMARY
-    KeyLayer &exampleBaseLayer = keyActionController.addLayer();
-    keyActionController.switchBaseLayer(exampleBaseLayer);
+#define NUM_KEYS 6
 
-    exampleBaseLayer.setAction(0, KeyAction(HID_KEY_SPACE));
+void configureKeys(KeyActionController& keyActionController) {
+#ifdef KEYBOARD_PRIMARY
+    BasicKeyLayer& text = *new BasicKeyLayer(NUM_KEYS);
+
+    keyActionController.switchBaseLayer(text);
+
+    text.setAction(0, KeyAction(HID_KEY_SPACE));
 #else
     (void) keyActionController;
 #endif
 }
 
-HWKeyConfig hwKeysPrimary[] = {
-        HWKeyConfig(0, 0),
-        HWKeyConfig(1, 1),
-        HWKeyConfig(2, 2),
+HWMatrixKeyConfig hwMatrixKeys[] = {
+    HWMatrixKeyConfig(0, 1, 3),
+    HWMatrixKeyConfig(1, 1, 4),
+    HWMatrixKeyConfig(2, 1, 5),
+    HWMatrixKeyConfig(3, 2, 3),
+    HWMatrixKeyConfig(4, 2, 4),
+    HWMatrixKeyConfig(5, 2, 5),
 };
 
-LedConfig ledConfigsPrimary[] = {
-        LedConfig(0, 0, 0, 0, 0),
-        LedConfig(1, 1, 1, 0, 1),
-        LedConfig(2, 2, 0, 1, 2),
-        LedConfig(3, 6, -1, -1),
-        LedConfig(4, 7, -2, -1)
+LedConfig ledConfigs[] = {
+    LedConfig(0, 0, 0, 0, 0),
+    LedConfig(1, 1, 1, 0, 1),
+    LedConfig(2, 3, 2, 0, 2),
+    LedConfig(3, 4, 0, 1, 3),
+    LedConfig(4, 5, 1, 1, 4),
+    LedConfig(5, 6, 2, 1, 5),
+    LedConfig(6, 7, -1, -1),
+    LedConfig(7, 8, -2, -1)
 };
 
-HWKeyConfig hwKeysSecondary[] = {
-        HWKeyConfig(0, 3),
-        HWKeyConfig(1, 4),
-        HWKeyConfig(2, 5),
-};
-
-LedConfig ledConfigsSecondary[] = {
-        LedConfig(0, 3, 0, 0, 3),
-        LedConfig(1, 4, 1, 0, 4),
-        LedConfig(2, 5, 0, 1, 5),
-        LedConfig(3, 8, -1, -1),
-        LedConfig(4, 9, -2, -1)
-};
+void configureStartup(
+    const std::function<void(absolute_time_t time, std::function<void(absolute_time_t timestamp)> block)>& exec) {
+    exec(100000, [](const absolute_time_t timestamp) {
+        rgbController.setEffect(timestamp,
+                                std::make_shared<HeatmapEffect>(Color::Red(), Color::Blue(), 0.002, 2000, 30, false),
+                                2500000
+        );
+    });
+}
 
 PicoKeyboardConfig getKeyboardConfig() {
-    DisplayConfig commonDisplayConfig = DisplayConfig(
-            spi1,
-            11,
-            10,
-            9,
-            8,
-            12,
-            25,
-            52,
-            40,
-            135,
-            240,
-            Degree_90
-    );
-
     return {
-            6,
-            configureKeys,
-            {
-                    3,
-                    hwKeysPrimary,
-                    3,
-                    5,
-                    ledConfigsPrimary,
-                    commonDisplayConfig,
-                    uart1,
-                    4,
-                    5
-            },
-            {
-                    3,
-                    hwKeysSecondary,
-                    3,
-                    5,
-                    ledConfigsSecondary,
-                    commonDisplayConfig,
-                    uart1,
-                    4,
-                    5
-            }
+        NUM_KEYS,
+        configureKeys,
+        configureStartup,
+        false,
+        new PicoKeyboardDeviceConfig(6, hwMatrixKeys, 6, 8, ledConfigs)
     };
 }

@@ -54,10 +54,11 @@ struct DisplayConfig {
 struct PicoKeyboardDeviceConfig {
     uint8_t numHwKeys;
     HWKeyConfig* hwKeys;
+    HWMatrixKeyConfig* hwMatrixKeys;
     uint8_t ledPin;
     uint8_t numLEDs;
     LedConfig* leds;
-    DisplayConfig display;
+    DisplayConfig* display;
     uart_inst* uart;
     uint8_t txPin;
     uint8_t rxPin;
@@ -67,12 +68,33 @@ struct PicoKeyboardDeviceConfig {
                              const uint8_t ledPin,
                              const uint8_t numLEDs,
                              LedConfig* leds,
-                             const DisplayConfig& display,
-                             uart_inst* uart,
-                             const uint8_t txPin,
-                             const uint8_t rxPin)
+                             DisplayConfig* display = nullptr,
+                             uart_inst* uart = nullptr,
+                             const uint8_t txPin = 0,
+                             const uint8_t rxPin = 0)
         : numHwKeys(numHwKeys),
           hwKeys(hwKeys),
+          hwMatrixKeys(nullptr),
+          ledPin(ledPin),
+          numLEDs(numLEDs),
+          leds(leds),
+          display(display),
+          uart(uart),
+          txPin(txPin),
+          rxPin(rxPin) {}
+
+    PicoKeyboardDeviceConfig(const uint8_t numHwKeys,
+                             HWMatrixKeyConfig* hwMatrixKeys,
+                             const uint8_t ledPin,
+                             const uint8_t numLEDs,
+                             LedConfig* leds,
+                             DisplayConfig* display = nullptr,
+                             uart_inst* uart = nullptr,
+                             const uint8_t txPin = 0,
+                             const uint8_t rxPin = 0)
+        : numHwKeys(numHwKeys),
+          hwKeys(nullptr),
+          hwMatrixKeys(hwMatrixKeys),
           ledPin(ledPin),
           numLEDs(numLEDs),
           leds(leds),
@@ -92,18 +114,18 @@ struct PicoKeyboardConfig {
 
     bool isMirrored;
 
-    PicoKeyboardDeviceConfig primary;
-    PicoKeyboardDeviceConfig secondary;
+    PicoKeyboardDeviceConfig* primary;
+    PicoKeyboardDeviceConfig* secondary;
 
-    PicoKeyboardConfig(uint8_t totalNumKeys,
+    PicoKeyboardConfig(const uint8_t totalNumKeys,
                        void (*configureKeys)(KeyActionController&),
                        std::function<void(const std::function<void(absolute_time_t time,
                                                                    std::function<void(
                                                                        absolute_time_t timestamp)> block)>& exec)>
                        configureStartup,
-                       bool isMirrored,
-                       PicoKeyboardDeviceConfig primary,
-                       PicoKeyboardDeviceConfig secondary)
+                       const bool isMirrored,
+                       PicoKeyboardDeviceConfig* primary,
+                       PicoKeyboardDeviceConfig* secondary = nullptr)
         : totalNumKeys(totalNumKeys),
           configureKeys(configureKeys),
           configureStartup(std::move(configureStartup)),

@@ -39,6 +39,7 @@ void InterDeviceCommunicator::tick() {
 
 InterDeviceCommunicator::InterDeviceCommunicator(uart_inst* uart, const uint8_t txPin, const uint8_t rxPin)
     : uart(uart) {
+    if (uart == nullptr) return;
     gpio_set_function(txPin, GPIO_FUNC_UART);
     gpio_set_function(rxPin, GPIO_FUNC_UART);
 
@@ -48,15 +49,18 @@ InterDeviceCommunicator::InterDeviceCommunicator(uart_inst* uart, const uint8_t 
 }
 
 void InterDeviceCommunicator::execute(absolute_time_t timestamp) {
+    if (uart == nullptr) return;
     tick();
 }
 
 void InterDeviceCommunicator::send(const uint8_t data) {
+    if (uart == nullptr) return;
     outputBuffer.push_back(data);
     tick();
 }
 
-void InterDeviceCommunicator::send(uint8_t* data, size_t size) {
+void InterDeviceCommunicator::send(uint8_t* data, const size_t size) {
+    if (uart == nullptr) return;
     outputBuffer.insert(outputBuffer.end(), data, data + size);
     tick();
 }
@@ -74,6 +78,7 @@ void InterDeviceCommunicator::send64(uint64_t data) {
 }
 
 uint8_t InterDeviceCommunicator::peek() {
+    if (uart == nullptr) return 0;
     while (inputBuffer.empty()) {
         sleep_us(10);
         tick();
@@ -83,12 +88,14 @@ uint8_t InterDeviceCommunicator::peek() {
 }
 
 uint8_t InterDeviceCommunicator::receive() {
+    if (uart == nullptr) return 0;
+
     const uint8_t data = peek();
     inputBuffer.pop_front();
     return data;
 }
 
-void InterDeviceCommunicator::receive(uint8_t* buf, size_t size) {
+void InterDeviceCommunicator::receive(uint8_t* buf, const size_t size) {
     for (size_t i = 0; i < size; i++) {
         buf[i] = receive();
     }
@@ -113,6 +120,8 @@ uint64_t InterDeviceCommunicator::receive64() {
 }
 
 bool InterDeviceCommunicator::hasData() {
+    if (uart == nullptr) return false;
+
     tick();
     return !inputBuffer.empty();
 }

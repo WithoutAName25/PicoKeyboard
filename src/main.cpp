@@ -23,17 +23,8 @@ bool isPrimary = false;
 
 PicoKeyboardConfig config = getKeyboardConfig();
 
-PicoKeyboardDeviceConfig& deviceConfig = isPrimary ? config.primary : config.secondary;
-PicoKeyboardDeviceConfig& otherDeviceConfig = isPrimary ? config.secondary : config.primary;
-
-DisplayConfig& display = deviceConfig.display;
-
-HardwareSPIInterface lcd_spi(display.spiInst, display.dataPin, display.clockPin,
-                             display.chipSelectPin, display.dataCommandPin);
-LCDDirectGraphics lcd(&lcd_spi, display.resetPin, display.backlightPin,
-                      display.hwXOffset,
-                      display.hwYOffset, display.hwWidth, display.hwHeight,
-                      display.rotation);
+PicoKeyboardDeviceConfig& deviceConfig = *(isPrimary ? config.primary : config.secondary);
+PicoKeyboardDeviceConfig& otherDeviceConfig = *(isPrimary ? config.secondary : config.primary);
 
 Scheduler scheduler;
 
@@ -46,7 +37,7 @@ RGBController rgbController(deviceConfig.leds, config.isMirrored ? otherDeviceCo
 
 KeyStateController keyStateController(config.totalNumKeys);
 
-KeyListener keyListener(keyStateController, deviceConfig.hwKeys, deviceConfig.numHwKeys);
+IKeyListener* keyListener;
 
 #ifdef KEYBOARD_PRIMARY
 KeyActionController keyActionController(config.totalNumKeys, keyStateController);
@@ -78,13 +69,29 @@ int main() {
 
     rgb_init(pio0, deviceConfig.ledPin);
 
-    lcd.init();
-    lcd.setBrightness(0);
-    lcd.clear(0);
+    if (deviceConfig.display != nullptr) {
+        const DisplayConfig& display = *deviceConfig.display;
 
-    keyListener.setupPins();
+        HardwareSPIInterface lcd_spi(display.spiInst, display.dataPin, display.clockPin,
+                                     display.chipSelectPin, display.dataCommandPin);
+        LCDDirectGraphics lcd(&lcd_spi, display.resetPin, display.backlightPin,
+                              display.hwXOffset,
+                              display.hwYOffset, display.hwWidth, display.hwHeight,
+                              display.rotation);
+        lcd.init();
+        lcd.setBrightness(0);
+        lcd.clear(0);
+    }
 
-    scheduler.addPeriodicTask(&keyListener, get_absolute_time(), 500);
+    if (deviceConfig.hwKeys != nullptr) {
+        keyListener = new KeyListener(keyStateController, deviceConfig.numHwKeys, deviceConfig.hwKeys);
+    } else {
+        keyListener = new KeyMatrixListener(keyStateController, deviceConfig.numHwKeys, deviceConfig.hwMatrixKeys);
+    }
+
+    keyListener->setupPins();
+
+    scheduler.addPeriodicTask(keyListener, get_absolute_time(), 500);
     scheduler.addPeriodicTask(&interDeviceCommunicator, get_absolute_time(), 100);
     scheduler.addPeriodicTask(&commandController, get_absolute_time(), 100);
     scheduler.addPeriodicTask(&rgbController, get_absolute_time(), 10000);
