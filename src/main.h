@@ -123,9 +123,23 @@ struct PicoKeyboardConfig {
                                                                    std::function<void(
                                                                        absolute_time_t timestamp)> block)>& exec)>
                        configureStartup,
+                       PicoKeyboardDeviceConfig* primary)
+        : totalNumKeys(totalNumKeys),
+          configureKeys(configureKeys),
+          configureStartup(std::move(configureStartup)),
+          isMirrored(false),
+          primary(primary),
+          secondary(nullptr) {}
+
+    PicoKeyboardConfig(const uint8_t totalNumKeys,
+                       void (*configureKeys)(KeyActionController&),
+                       std::function<void(const std::function<void(absolute_time_t time,
+                                                                   std::function<void(
+                                                                       absolute_time_t timestamp)> block)>& exec)>
+                       configureStartup,
                        const bool isMirrored,
                        PicoKeyboardDeviceConfig* primary,
-                       PicoKeyboardDeviceConfig* secondary = nullptr)
+                       PicoKeyboardDeviceConfig* secondary)
         : totalNumKeys(totalNumKeys),
           configureKeys(configureKeys),
           configureStartup(std::move(configureStartup)),
