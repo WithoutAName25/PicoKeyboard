@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../action/BaseLayerAction.h"
+#include "../action/BootloaderAction.h"
 #include "../action/ConsumerControlAction.h"
 #include "../action/CustomAction.h"
 #include "../action/ExclusiveAction.h"
