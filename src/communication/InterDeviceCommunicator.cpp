@@ -1,12 +1,37 @@
 #include "InterDeviceCommunicator.h"
 
+#include "command/Command.h"
+
 void InterDeviceCommunicator::tick() {
+    uint8_t received = 0;
     while (uart_is_readable(uart)) {
-        uint8_t data;
-        uart_read_blocking(uart, &data, 1);
-        inputBuffer.push_back(data);
+        uint8_t controlPacket;
+        uart_read_blocking(uart, &controlPacket, 1);
+        const uint8_t num = controlPacket & 0x7F;
+        if (controlPacket & 0x80) {
+            uint8_t data;
+            for (int i = 0; i < num; ++i) {
+                uart_read_blocking(uart, &data, 1);
+                inputBuffer.push_back(data);
+            }
+            received += num;
+        } else {
+            if (bytesInFlight < num) {
+                bytesInFlight = 0;
+            } else {
+                bytesInFlight -= num;
+            }
+        }
     }
-    while (!outputBuffer.empty() && uart_is_writable(uart)) {
+    if (received > 0) {
+        uart_write_blocking(uart, &received, 1);
+    }
+    const uint8_t toSend = std::min<uint32_t>(24 - bytesInFlight, outputBuffer.size());
+    if (toSend == 0) return;
+    bytesInFlight += toSend;
+    const uint8_t data = toSend | 0x80;
+    uart_write_blocking(uart, &data, 1);
+    for (uint8_t i = 0; i < toSend; ++i) {
         uart_write_blocking(uart, &outputBuffer.front(), 1);
         outputBuffer.pop_front();
     }

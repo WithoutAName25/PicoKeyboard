@@ -8,6 +8,7 @@ class InterDeviceCommunicator final : public IExecutable {
     uart_inst_t* uart;
     std::list<uint8_t> inputBuffer;
     std::list<uint8_t> outputBuffer;
+    uint8_t bytesInFlight = 0;
 
     void tick();
 
@@ -30,7 +31,7 @@ public:
 
     uint8_t receive();
 
-    void receive(uint8_t *buf, size_t size);
+    void receive(uint8_t* buf, size_t size);
 
     uint16_t receive16();
 

@@ -9,10 +9,12 @@
 class InterDeviceCommunicator;
 
 enum class EffectType: uint8_t {
+    FADING,
+    HEATMAP,
     KEY_STATE,
     RAINBOW_WAVE,
+    SEQUENCE,
     STATIC_RGB,
-    HEATMAP
 };
 
 class IRGBEffect {

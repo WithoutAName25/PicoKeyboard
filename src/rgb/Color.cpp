@@ -95,8 +95,8 @@ void Color::serialize(InterDeviceCommunicator communicator) const {
     communicator.send(hsv_valid);
     if (hsv_valid) {
         communicator.send16(h);
-        communicator.send(s*255);
-        communicator.send(v*255);
+        communicator.send(s * 255);
+        communicator.send(v * 255);
     } else {
         communicator.send(r);
         communicator.send(g);
@@ -122,15 +122,15 @@ uint32_t Color::toPixelFormatW(const uint8_t white) {
 Color Color::withBrightness(const float brightness) const {
     const float b = std::clamp(brightness, 0.0f, 1.0f);
 
-    if (hsv_valid) {
-        return {h, s, v * b};
-    } else {
-        return {
-            static_cast<uint8_t>(r * b),
-            static_cast<uint8_t>(g * b),
-            static_cast<uint8_t>(b * b)
-        };
-    }
+    if (b == 1.0f) return *this;
+    if (b == 0.0f) return Black();
+
+    if (hsv_valid) return {h, s, v * b};
+    return {
+        static_cast<uint8_t>(r * b),
+        static_cast<uint8_t>(g * b),
+        static_cast<uint8_t>(this->b * b)
+    };
 }
 
 Color Color::Black() { return FromRGB(0, 0, 0); }
@@ -185,12 +185,21 @@ Color Color::temperature(uint16_t kelvin) {
 Color Color::interpolateHSV(const Color& from, const Color& to, float t) {
     t = std::clamp(t, 0.0f, 1.0f);
 
-    const uint16_t h1 = from.hue();
-    const uint16_t h2 = to.hue();
-    const float s1 = from.saturation();
-    const float s2 = to.saturation();
+    uint16_t h1 = from.hue();
+    uint16_t h2 = to.hue();
+    float s1 = from.saturation();
+    float s2 = to.saturation();
     const float v1 = from.value();
     const float v2 = to.value();
+
+    if (v1 == 0) {
+        h1 = h2;
+        s1 = s2;
+    }
+    if (v2 == 0) {
+        h2 = h1;
+        s2 = s1;
+    }
 
     float h_diff = static_cast<float>(h2) - static_cast<float>(h1);
 

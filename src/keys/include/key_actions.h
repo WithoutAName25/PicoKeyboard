@@ -2,6 +2,7 @@
 
 #include "../action/BaseLayerAction.h"
 #include "../action/ConsumerControlAction.h"
+#include "../action/CustomAction.h"
 #include "../action/ExclusiveAction.h"
 #include "../action/KeyAction.h"
 #include "../action/ModifierAction.h"

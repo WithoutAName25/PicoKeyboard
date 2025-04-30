@@ -14,7 +14,7 @@ class RGBController final : public IExecutable {
     std::unique_ptr<uint32_t[]> data;
     std::shared_ptr<IRGBEffect> currentEffect;
 
-    void setPixel(uint8_t hwNumber, Color &color);
+    void setPixel(uint8_t hwNumber, Color& color);
 
     void write() const;
 
@@ -23,5 +23,6 @@ class RGBController final : public IExecutable {
 public:
     RGBController(LedConfig* ledConfigs, LedConfig* mirroredLeds, uint8_t numLEDs);
 
-    void setEffect(const std::shared_ptr<IRGBEffect>& effect);
+    void setEffect(absolute_time_t timestamp, const std::shared_ptr<IRGBEffect>& effect, uint64_t fadeTime = 0,
+                   bool sync = true);
 };

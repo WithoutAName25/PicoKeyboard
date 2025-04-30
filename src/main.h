@@ -8,6 +8,9 @@
 
 #include <utility>
 
+extern RGBController rgbController;
+extern KeyStateController keyStateController;
+
 struct DisplayConfig {
     spi_inst* spiInst;
     uint8_t dataPin;
@@ -83,8 +86,9 @@ struct PicoKeyboardConfig {
     uint8_t totalNumKeys;
 
     void (*configureKeys)(KeyActionController&);
-
-    std::shared_ptr<IRGBEffect> defaultEffect;
+    std::function<void(
+        const std::function<void(absolute_time_t time, std::function<void(absolute_time_t timestamp)> block)>& exec)>
+    configureStartup;
 
     bool isMirrored;
 
@@ -93,13 +97,16 @@ struct PicoKeyboardConfig {
 
     PicoKeyboardConfig(uint8_t totalNumKeys,
                        void (*configureKeys)(KeyActionController&),
-                       std::shared_ptr<IRGBEffect> defaultEffect,
+                       std::function<void(const std::function<void(absolute_time_t time,
+                                                                   std::function<void(
+                                                                       absolute_time_t timestamp)> block)>& exec)>
+                       configureStartup,
                        bool isMirrored,
                        PicoKeyboardDeviceConfig primary,
                        PicoKeyboardDeviceConfig secondary)
         : totalNumKeys(totalNumKeys),
           configureKeys(configureKeys),
-          defaultEffect(std::move(defaultEffect)),
+          configureStartup(std::move(configureStartup)),
           isMirrored(isMirrored),
           primary(primary),
           secondary(secondary) {}

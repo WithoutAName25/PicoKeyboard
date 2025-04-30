@@ -1,6 +1,9 @@
 #include "KeyStateController.h"
 
+#include <algorithm>
 #include <communication.h>
+
+#define MIN_TIME_BETWEEN_STATE_CHANGES 2500
 
 extern CommandController commandController;
 
@@ -12,9 +15,11 @@ KeyStateController::KeyStateController(const uint8_t numKeys)
     : keyStates(new KeyState[numKeys]) {}
 
 void KeyStateController::updateKeyState(const uint8_t keyId, const bool isPressed, const absolute_time_t timestamp,
-                                        bool localKey) {
+                                        const bool localKey) {
     KeyState& state = keyStates[keyId];
+
     if (state.isPressed == isPressed) return;
+    if (std::max(state.pressTime, state.releaseTime) + MIN_TIME_BETWEEN_STATE_CHANGES > timestamp) return;
 
     state.isPressed = isPressed;
     if (isPressed) {

@@ -1,12 +1,14 @@
 #include "RGBController.h"
 
+#include <communication.h>
 #include "neopixel.h"
-#include "../../lib/LCDLibrary/utils.h"
+#include "effect/FadingEffect.h"
 #include "effect/IRGBEffect.h"
 
+extern CommandController commandController;
 Color black = Color::Black();
 
-void RGBController::setPixel(const uint8_t hwNumber, Color &color) {
+void RGBController::setPixel(const uint8_t hwNumber, Color& color) {
     data[hwNumber] = color.toPixelFormat();
 }
 
@@ -34,8 +36,24 @@ RGBController::RGBController(LedConfig* ledConfigs, LedConfig* mirroredLeds, con
     : ledConfigs(ledConfigs), mirroredLeds(mirroredLeds), numLEDs(numLEDs), data(new uint32_t[numLEDs]),
       currentEffect(nullptr) {}
 
-void RGBController::setEffect(const std::shared_ptr<IRGBEffect>& effect) {
+void RGBController::setEffect(absolute_time_t timestamp,
+                              const std::shared_ptr<IRGBEffect>& effect,
+                              const uint64_t fadeTime,
+                              const bool sync) {
+    if (sync) {
+        commandController.send<RGBEffectCommand>(effect, fadeTime);
+    }
+
     if (currentEffect != nullptr) currentEffect->disable();
-    currentEffect = effect;
+
+    if (fadeTime > 0)
+        currentEffect = std::make_shared<FadingEffect>(
+            currentEffect,
+            effect,
+            timestamp,
+            timestamp + fadeTime);
+    else
+        currentEffect = effect;
+
     if (currentEffect != nullptr) currentEffect->enable(ledConfigs, mirroredLeds, numLEDs);
 }

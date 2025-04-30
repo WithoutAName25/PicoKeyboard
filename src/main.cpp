@@ -5,6 +5,10 @@
 #include "rgb_effects.h"
 #include "main.h"
 
+#include <valarray>
+
+#include "util/LambdaExecutable.h"
+
 #ifdef KEYBOARD_PRIMARY
 
 #include "usb.h"
@@ -99,7 +103,16 @@ int main() {
     scheduler.addPeriodicTask(&hidCommunication, get_absolute_time(), 10000);
 #endif
 
-    rgbController.setEffect(config.defaultEffect);
+    config.configureStartup(
+        [](const absolute_time_t time, const std::function<void(absolute_time_t timestamp)>& block) {
+            // ReSharper disable once CppUseAuto
+            LambdaExecutable* task = // NOLINT(*-use-auto)
+                new LambdaExecutable([block, task](const absolute_time_t timestamp) {
+                    block(timestamp);
+                    delete task;
+                });
+            scheduler.addTask(task, time);
+        });
 
     scheduler.run();
 

@@ -5,11 +5,11 @@
 
 // Command ids are prefix codes with a 1 at the start to mark the first bit
 enum class CommonCommandIDs: uint16_t {
-    KEY = 0b10
+    KEY = 0b10,
 };
 
 enum class PrimaryToSecondaryCommandIDs: uint16_t {
-    RGB_EFFECT = 0b110000000
+    RGB_EFFECT = 0b110000000,
 };
 
 enum class SecondaryToPrimaryCommandIDs: uint16_t {};
