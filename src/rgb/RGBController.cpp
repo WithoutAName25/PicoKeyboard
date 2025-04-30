@@ -59,9 +59,9 @@ void RGBController::setEffect(absolute_time_t timestamp,
     if (currentEffect != nullptr) currentEffect->enable(ledConfigs, mirroredLeds, numLEDs);
 }
 
-void RGBController::setBrightness(const float brightness, const bool absolute const bool sync) {
+void RGBController::setBrightness(const float brightness, const bool absolute, const bool sync) {
     if (sync) {
-        commandController.send<>()
+        commandController.send<RGBBrightnessCommand>(brightness, absolute);
     }
 
     this->brightness = std::clamp(absolute ? brightness : this->brightness + brightness, 0.0f, 1.0f);
