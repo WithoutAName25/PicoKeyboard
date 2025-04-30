@@ -1,3 +1,3 @@
 [submodule "lib/LCDLibrary"]
 	path = lib/LCDLibrary
-	url = git@github.com:WithoutAName25/LCDLibrary.git
+	url = https://github.com/WithoutAName25/LCDLibrary.git
