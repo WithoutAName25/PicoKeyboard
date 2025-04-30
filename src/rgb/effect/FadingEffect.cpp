@@ -47,11 +47,11 @@ Color FadingEffect::getColor(LedConfig& led, const absolute_time_t timestamp) {
     }
     if (timestamp < startTime) {
         if (oldEffect == nullptr) {
-            return Color::Black();
+            return Color::None();
         }
         return oldEffect->getColor(led, timestamp);
     }
-    const Color oldColor = oldEffect != nullptr ? oldEffect->getColor(led, startTime) : Color::Black();
+    const Color oldColor = oldEffect != nullptr ? oldEffect->getColor(led, startTime) : Color::None();
     const Color newColor = newEffect->getColor(led, endTime);
     return Color::interpolate(oldColor, newColor,
                               static_cast<float>(timestamp - startTime)
@@ -68,7 +68,7 @@ FadingEffect::FadingEffect(const std::shared_ptr<IRGBEffect>& oldEffect,
       startTime(startTime),
       endTime(endTime) {}
 
-FadingEffect::FadingEffect(InterDeviceCommunicator communicator) : IRGBEffect(EffectType::FADING) {
+FadingEffect::FadingEffect(InterDeviceCommunicator& communicator) : IRGBEffect(EffectType::FADING) {
     if (communicator.receive()) {
         oldEffect = create(communicator);
     }

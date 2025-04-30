@@ -6,14 +6,14 @@
 Color::Color(const uint8_t red, const uint8_t green, const uint8_t blue)
     : r(red), g(green), b(blue),
       h(0), s(0), v(0),
-      rgb_valid(true), hsv_valid(false) {}
+      rgb_valid(true), hsv_valid(false), none(false) {}
 
 Color::Color(const uint16_t hue, const float saturation, const float value)
     : r(0), g(0), b(0),
       h(hue % 360),
       s(std::clamp(saturation, 0.0f, 1.0f)),
       v(std::clamp(value, 0.0f, 1.0f)),
-      rgb_valid(false), hsv_valid(true) {}
+      rgb_valid(false), hsv_valid(true), none(false) {}
 
 Color Color::FromRGB(uint8_t red, uint8_t green, uint8_t blue) {
     return {red, green, blue};
@@ -61,25 +61,10 @@ float Color::value() {
     return v;
 }
 
-void Color::setRGB(const uint8_t red, const uint8_t green, const uint8_t blue) {
-    r = red;
-    g = green;
-    b = blue;
-    rgb_valid = true;
-    hsv_valid = false;
-}
-
-void Color::setHSV(const uint16_t hue, const float saturation, const float value) {
-    h = hue % 360;
-    s = std::clamp(saturation, 0.0f, 1.0f);
-    v = std::clamp(value, 0.0f, 1.0f);
-    hsv_valid = true;
-    rgb_valid = false;
-}
-
-Color::Color(InterDeviceCommunicator communicator) {
+Color::Color(InterDeviceCommunicator& communicator) {
     hsv_valid = communicator.receive();
     rgb_valid = !hsv_valid;
+    none = communicator.receive();
     if (hsv_valid) {
         h = communicator.receive16();
         s = communicator.receive() / 255.0f;
@@ -91,8 +76,9 @@ Color::Color(InterDeviceCommunicator communicator) {
     }
 }
 
-void Color::serialize(InterDeviceCommunicator communicator) const {
+void Color::serialize(InterDeviceCommunicator& communicator) const {
     communicator.send(hsv_valid);
+    communicator.send(none);
     if (hsv_valid) {
         communicator.send16(h);
         communicator.send(s * 255);
@@ -133,6 +119,10 @@ Color Color::withBrightness(const float brightness) const {
     };
 }
 
+bool Color::isNone() const {
+    return none;
+}
+
 Color Color::Black() { return FromRGB(0, 0, 0); }
 Color Color::White() { return FromRGB(255, 255, 255); }
 Color Color::Red() { return FromRGB(255, 0, 0); }
@@ -143,6 +133,12 @@ Color Color::Cyan() { return FromRGB(0, 255, 255); }
 Color Color::Magenta() { return FromRGB(255, 0, 255); }
 Color Color::Orange() { return FromRGB(255, 165, 0); }
 Color Color::Purple() { return FromRGB(128, 0, 128); }
+
+Color Color::None() {
+    Color none = Black();
+    none.none = true;
+    return none;
+}
 
 Color Color::temperature(uint16_t kelvin) {
     // Approximation of color temperature

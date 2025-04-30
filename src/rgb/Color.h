@@ -11,6 +11,7 @@ class Color {
     float s, v;
     bool rgb_valid;
     bool hsv_valid;
+    bool none;
 
     Color(uint8_t red, uint8_t green, uint8_t blue);
     Color(uint16_t hue, float saturation, float value);
@@ -39,16 +40,15 @@ public:
     float saturation();
     float value();
 
-    void setRGB(uint8_t red, uint8_t green, uint8_t blue);
-    void setHSV(uint16_t hue, float saturation, float value);
-
-    explicit Color(InterDeviceCommunicator communicator);
-    void serialize(InterDeviceCommunicator communicator) const;
+    explicit Color(InterDeviceCommunicator& communicator);
+    void serialize(InterDeviceCommunicator& communicator) const;
 
     uint32_t toPixelFormat();
     uint32_t toPixelFormatW(uint8_t white = 0);
 
     [[nodiscard]] Color withBrightness(float brightness) const;
+
+    [[nodiscard]] bool isNone() const;
 
     static Color Black();
     static Color White();
@@ -60,6 +60,8 @@ public:
     static Color Magenta();
     static Color Orange();
     static Color Purple();
+
+    static Color None();
 
     static Color temperature(uint16_t kelvin);
     static Color interpolateHSV(const Color& from, const Color& to, float t);

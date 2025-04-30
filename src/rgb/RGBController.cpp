@@ -19,16 +19,23 @@ void RGBController::write() const {
     }
 }
 
+Color RGBController::getColor(const absolute_time_t timestamp, LedConfig& ledConfig) const {
+    for (const auto& overlayEffect : overlayEffects) {
+        if (Color color = overlayEffect->getColor(ledConfig, timestamp); !color.isNone())
+            return color;
+    }
+
+    if (currentEffect == nullptr) return black;
+
+    return currentEffect->getColor(ledConfig, timestamp);
+}
+
 void RGBController::execute(const absolute_time_t timestamp) {
     if (currentEffect != nullptr) currentEffect->update(timestamp);
     for (int i = 0; i < numLEDs; ++i) {
         LedConfig& ledConfig = ledConfigs[i];
-        if (currentEffect == nullptr) {
-            setPixel(ledConfig.hwNumber, black);
-        } else {
-            Color color = currentEffect->getColor(ledConfig, timestamp).withBrightness(brightness);
-            setPixel(ledConfig.hwNumber, color);
-        }
+        Color color = getColor(timestamp, ledConfig).withBrightness(brightness);
+        setPixel(ledConfig.hwNumber, color);
     }
     write();
 }
@@ -65,4 +72,28 @@ void RGBController::setBrightness(const float brightness, const bool absolute, c
     }
 
     this->brightness = std::clamp(absolute ? brightness : this->brightness + brightness, 0.0f, 1.0f);
+}
+
+OverlayEffectReference RGBController::addOverlayEffect(const std::shared_ptr<IRGBEffect>& effect, const bool sync) {
+    if (sync) {
+        commandController.send<RGBOverlayEffectCommand>(effect);
+    }
+
+    overlayEffects.emplace_front(effect);
+    return overlayEffects.begin();
+}
+
+void RGBController::removeOverlayEffect(const OverlayEffectReference reference) {
+    const auto index = static_cast<uint16_t>(std::distance(overlayEffects.begin(), reference));
+    commandController.send<RGBOverlayEffectCommand>(index);
+
+    overlayEffects.erase(reference);
+}
+
+void RGBController::removeOverlayEffect(const uint16_t id) {
+    auto it = overlayEffects.begin();
+    std::advance(it, id);
+    if (it != overlayEffects.end()) {
+        overlayEffects.erase(it);
+    }
 }

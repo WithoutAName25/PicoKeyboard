@@ -12,6 +12,7 @@ enum class EffectType: uint8_t {
     FADING,
     HEATMAP,
     KEY_STATE,
+    PER_LED,
     RAINBOW_WAVE,
     SEQUENCE,
     STATIC_RGB,

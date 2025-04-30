@@ -21,5 +21,5 @@ public:
     FadingEffect(const std::shared_ptr<IRGBEffect>& oldEffect, const std::shared_ptr<IRGBEffect>& newEffect,
                  absolute_time_t startTime, absolute_time_t endTime);
 
-    explicit FadingEffect(InterDeviceCommunicator communicator);
+    explicit FadingEffect(InterDeviceCommunicator& communicator);
 };

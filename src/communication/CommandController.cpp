@@ -1,6 +1,7 @@
 #include "CommandController.h"
 #include "command/KeyCommand.h"
 #include "command/RGBEffectCommand.h"
+#include "command/RGBOverlayEffectCommand.h"
 
 void CommandController::execute(const absolute_time_t timestamp) {
     while (communicator.hasData()) {
@@ -28,5 +29,6 @@ CommandController::CommandController(InterDeviceCommunicator& communicator, cons
     if (isPrimary) {} else {
         listenFor<RGBBrightnessCommand>();
         listenFor<RGBEffectCommand>();
+        listenFor<RGBOverlayEffectCommand>();
     }
 }

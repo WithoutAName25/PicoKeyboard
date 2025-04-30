@@ -24,7 +24,7 @@ void SequenceEffect::serialize(InterDeviceCommunicator& communicator) {
 }
 
 Color SequenceEffect::getColor(LedConfig& led, const absolute_time_t timestamp) {
-    if (timestamp < startTime || (!looping && startTime + totalDurationMs * 1000 < timestamp)) return Color::Black();
+    if (timestamp < startTime || (!looping && startTime + totalDurationMs * 1000 < timestamp)) return Color::None();
 
     const uint64_t elapsedMs = absolute_time_diff_us(startTime, timestamp) / 1000;
     const uint64_t timeInSequenceMs = looping ? (elapsedMs % totalDurationMs) : std::min(elapsedMs, totalDurationMs);

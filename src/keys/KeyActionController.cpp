@@ -18,15 +18,19 @@ KeyActionController::KeyActionController(const uint8_t numKeys, KeyStateControll
 }
 
 void KeyActionController::switchBaseLayer(KeyLayer& layer) {
+    if (currentBaseLayer != nullptr) currentBaseLayer->disable();
     currentBaseLayer = &layer;
+    if (currentBaseLayer != nullptr) currentBaseLayer->enable();
 }
 
 OverlayLayerReference KeyActionController::addOverlayLayer(KeyLayer& layer) {
+    layer.enable();
     activeOverlayLayers.emplace_front(&layer);
     return activeOverlayLayers.begin();
 }
 
 void KeyActionController::removeOverlayLayer(const OverlayLayerReference reference) {
+    (*reference)->disable();
     activeOverlayLayers.erase(reference);
 }
 

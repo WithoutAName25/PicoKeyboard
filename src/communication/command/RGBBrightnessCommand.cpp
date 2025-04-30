@@ -8,7 +8,7 @@ void RGBBrightnessCommand::execute(absolute_time_t timestamp) {
     rgbController.setBrightness(brightness, absolute, false);
 }
 
-RGBBrightnessCommand::RGBBrightnessCommand(float brightness, bool absolute)
+RGBBrightnessCommand::RGBBrightnessCommand(const float brightness, const bool absolute)
     : brightness(brightness), absolute(absolute) {}
 
 RGBBrightnessCommand::RGBBrightnessCommand(InterDeviceCommunicator& communicator) {

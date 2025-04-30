@@ -11,6 +11,7 @@ enum class CommonCommandIDs: uint16_t {
 enum class PrimaryToSecondaryCommandIDs: uint16_t {
     RGB_EFFECT = 0b110000000,
     RGB_BRIGHTNESS = 0b110000001,
+    RGB_OVERLAY_EFFECT = 0b11000001,
 };
 
 enum class SecondaryToPrimaryCommandIDs: uint16_t {};

@@ -13,5 +13,5 @@ Color StaticRGBEffect::getColor(LedConfig& led, absolute_time_t timestamp) {
 
 StaticRGBEffect::StaticRGBEffect(const Color& color) : IRGBEffect(EffectType::STATIC_RGB), color(color) {}
 
-StaticRGBEffect::StaticRGBEffect(const InterDeviceCommunicator& communicator)
+StaticRGBEffect::StaticRGBEffect(InterDeviceCommunicator& communicator)
     : IRGBEffect(EffectType::STATIC_RGB), color(Color(communicator)) {}

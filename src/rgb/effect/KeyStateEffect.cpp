@@ -25,7 +25,7 @@ uint64_t KeyStateEffect::getTimeSinceRelease(const uint8_t keyId, const absolute
 }
 
 Color KeyStateEffect::getColor(LedConfig& led, const absolute_time_t timestamp) {
-    if (!led.isKeyLed) return Color::Black();
+    if (!led.isKeyLed) return Color::None();
 
     uint64_t sinceRelease = getTimeSinceRelease(led.associatedKeyId, timestamp);
     if (mirrored) {

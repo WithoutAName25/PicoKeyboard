@@ -7,6 +7,7 @@
 #include "RainbowWaveEffect.h"
 #include "StaticRGBEffect.h"
 #include "HeatmapEffect.h"
+#include "PerLEDEffect.h"
 #include "SequenceEffect.h"
 
 void IRGBEffect::serialize(InterDeviceCommunicator& communicator) {
@@ -21,6 +22,8 @@ std::shared_ptr<IRGBEffect> IRGBEffect::create(InterDeviceCommunicator& communic
         return std::make_shared<HeatmapEffect>(communicator);
     case EffectType::KEY_STATE:
         return std::make_shared<KeyStateEffect>(communicator);
+    case EffectType::PER_LED:
+        return std::make_shared<PerLEDEffect>(communicator);
     case EffectType::RAINBOW_WAVE:
         return std::make_shared<RainbowWaveEffect>(communicator);
     case EffectType::SEQUENCE:

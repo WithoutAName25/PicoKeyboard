@@ -12,5 +12,5 @@ class StaticRGBEffect final : public IRGBEffect {
 public:
     explicit StaticRGBEffect(const Color& color);
 
-    explicit StaticRGBEffect(const InterDeviceCommunicator& communicator);
+    explicit StaticRGBEffect(InterDeviceCommunicator& communicator);
 };

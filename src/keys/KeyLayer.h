@@ -13,4 +13,7 @@ public:
     virtual ~KeyLayer() = default;
 
     [[nodiscard]] virtual IKeyAction* getAction(uint8_t keyId) const = 0;
+
+    virtual void enable() = 0;
+    virtual void disable() = 0;
 };
