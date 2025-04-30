@@ -26,7 +26,7 @@ void RGBController::execute(const absolute_time_t timestamp) {
         if (currentEffect == nullptr) {
             setPixel(ledConfig.hwNumber, black);
         } else {
-            Color color = currentEffect->getColor(ledConfig, timestamp);
+            Color color = currentEffect->getColor(ledConfig, timestamp).withBrightness(brightness);
             setPixel(ledConfig.hwNumber, color);
         }
     }

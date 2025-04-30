@@ -13,12 +13,13 @@ RGBBrightnessCommand::RGBBrightnessCommand(float brightness, bool absolute)
 
 RGBBrightnessCommand::RGBBrightnessCommand(InterDeviceCommunicator& communicator) {
     communicator.receive();
-    brightness = std::bit_cast<float>(communicator.receive32());
+    brightness = 0;
+    communicator.receive(reinterpret_cast<uint8_t*>(&brightness), sizeof(brightness));
     absolute = communicator.receive();
 }
 
 void RGBBrightnessCommand::send(InterDeviceCommunicator& communicator) {
     communicator.send(ID & 0xFF);
-    communicator.send32(std::bit_cast<uint32_t>(brightness));
+    communicator.send(reinterpret_cast<uint8_t*>(&brightness), sizeof(brightness));
     communicator.send(absolute);
 }
