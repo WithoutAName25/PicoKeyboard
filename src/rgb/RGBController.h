@@ -13,6 +13,7 @@ class RGBController final : public IExecutable {
     uint8_t numLEDs;
     std::unique_ptr<uint32_t[]> data;
     std::shared_ptr<IRGBEffect> currentEffect;
+    float brightness = 1.0f;
 
     void setPixel(uint8_t hwNumber, Color& color);
 
@@ -25,4 +26,6 @@ public:
 
     void setEffect(absolute_time_t timestamp, const std::shared_ptr<IRGBEffect>& effect, uint64_t fadeTime = 0,
                    bool sync = true);
+
+    void setBrightness(float brightness, bool absolute, bool sync = true);
 };
