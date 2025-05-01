@@ -9,6 +9,7 @@ class PerLEDEffect final : public IRGBEffect {
     std::map<uint8_t, std::shared_ptr<IRGBEffect>> effectPerLED;
     std::map<std::shared_ptr<IRGBEffect>, uint8_t> effectToId;
     std::map<uint8_t, std::shared_ptr<IRGBEffect>> idToEffect;
+    std::shared_ptr<IRGBEffect> fallback;
 
     void serialize(InterDeviceCommunicator& communicator) override;
 
@@ -19,7 +20,8 @@ class PerLEDEffect final : public IRGBEffect {
     void disable() override;
 
 public:
-    PerLEDEffect(std::initializer_list<std::pair<const uint8_t, std::shared_ptr<IRGBEffect>>> effectPerLED);
+    PerLEDEffect(std::initializer_list<std::pair<const uint8_t, std::shared_ptr<IRGBEffect>>> effectPerLED,
+                 std::shared_ptr<IRGBEffect> fallback = nullptr);
 
     explicit PerLEDEffect(InterDeviceCommunicator& communicator);
 };
