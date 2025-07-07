@@ -1,14 +1,15 @@
 #pragma once
 
-#include <queue>
-#include <memory>
 #include "Task.h"
 #include "pico/stdlib.h"
+#include <memory>
+#include <queue>
 
 class Scheduler {
     using PriorityQueue = std::priority_queue<Task *, std::vector<Task *>, CompareTask>;
 
     std::unique_ptr<PriorityQueue> queue;
+
 public:
     Scheduler();
 

@@ -14,11 +14,11 @@ struct HWMatrixKeyConfig {
 };
 
 class KeyMatrixListener final : public IKeyListener {
-    std::map<uint8_t, std::vector<HWMatrixKeyConfig*>> keysPerInPin;
+    std::map<uint8_t, std::vector<HWMatrixKeyConfig *>> keysPerInPin;
     std::set<uint8_t> outPins;
 
 public:
-    KeyMatrixListener(KeyStateController& controller, uint8_t numKeys, HWMatrixKeyConfig* keys);
+    KeyMatrixListener(KeyStateController &controller, uint8_t numKeys, HWMatrixKeyConfig *keys);
 
     void setupPins() override;
 

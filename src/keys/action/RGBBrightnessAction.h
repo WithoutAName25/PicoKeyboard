@@ -8,5 +8,5 @@ class RGBBrightnessAction : public IKeyAction {
 public:
     explicit RGBBrightnessAction(float brightness, bool absolute = true);
 
-    void execute(uint8_t keyId, const KeyState* state, absolute_time_t timestamp) override;
+    void execute(uint8_t keyId, const KeyState *state, absolute_time_t timestamp) override;
 };

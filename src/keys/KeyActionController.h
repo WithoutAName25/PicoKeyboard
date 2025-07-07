@@ -1,7 +1,7 @@
 #pragma once
 
-#include <memory>
 #include "KeyLayer.h"
+#include <memory>
 
 using OverlayLayerReference = std::list<KeyLayer *>::iterator;
 
@@ -24,5 +24,5 @@ public:
 
     [[nodiscard]] ListenerPriority getPriority() const override;
 
-    void onKeyStateChange(uint8_t keyId, const KeyState& state, absolute_time_t timestamp) override;
+    void onKeyStateChange(uint8_t keyId, const KeyState &state, absolute_time_t timestamp) override;
 };

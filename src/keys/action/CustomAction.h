@@ -9,6 +9,7 @@ class CustomAction final : public PressReleaseAction {
     void release(absolute_time_t timestamp) override;
 
 public:
-    explicit CustomAction(const std::function<void(absolute_time_t timestamp)>& onPress = [](absolute_time_t) {},
-                          const std::function<void(absolute_time_t timestamp)>& onRelease = [](absolute_time_t) {});
+    explicit CustomAction(
+        const std::function<void(absolute_time_t timestamp)> &onPress = [](absolute_time_t) {},
+        const std::function<void(absolute_time_t timestamp)> &onRelease = [](absolute_time_t) {});
 };

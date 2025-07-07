@@ -1,15 +1,11 @@
 #include "HIDKeyboard.h"
 
-void HIDKeyboard::pressModifier(Modifier modifier) {
-    modifierPressCounts[static_cast<uint>(modifier)] += 1;
-}
+void HIDKeyboard::pressModifier(Modifier modifier) { modifierPressCounts[static_cast<uint>(modifier)] += 1; }
 
-void HIDKeyboard::releaseModifier(Modifier modifier) {
-    modifierPressCounts[static_cast<uint>(modifier)] -= 1;
-}
+void HIDKeyboard::releaseModifier(Modifier modifier) { modifierPressCounts[static_cast<uint>(modifier)] -= 1; }
 
 void HIDKeyboard::pressKey(uint8_t keycode, absolute_time_t timestamp) {
-    for (KeyPressState& keyPressState : keyPressStates) {
+    for (KeyPressState &keyPressState : keyPressStates) {
         if (keyPressState.keycode == keycode) {
             keyPressState.count += 1;
             return;
@@ -34,9 +30,7 @@ KeyBlockingReference HIDKeyboard::blockNewKeys(const absolute_time_t timestamp) 
     return --blockingTimes.end();
 }
 
-void HIDKeyboard::unblockNewKeys(const KeyBlockingReference reference) {
-    blockingTimes.erase(reference);
-}
+void HIDKeyboard::unblockNewKeys(const KeyBlockingReference reference) { blockingTimes.erase(reference); }
 
 bool HIDKeyboard::hasReport() {
     bool hasReport = false;
@@ -76,7 +70,8 @@ hid_keyboard_report_t HIDKeyboard::getReport() {
             report.keycode[i] = state->keycode;
             state->reported = true;
             empty = false;
-            if (++i >= 6) break;
+            if (++i >= 6)
+                break;
         }
         ++state;
     }

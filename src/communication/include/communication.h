@@ -1,4 +1,4 @@
 #pragma once
 
-#include "../InterDeviceCommunicator.h"
 #include "../CommandController.h"
+#include "../InterDeviceCommunicator.h"

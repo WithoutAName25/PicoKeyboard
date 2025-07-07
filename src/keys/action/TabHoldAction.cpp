@@ -1,8 +1,8 @@
 #include "TabHoldAction.h"
 
 #include <rgb.h>
-#include <util.h>
 #include <sys/stat.h>
+#include <util.h>
 
 extern Scheduler scheduler;
 extern KeyStateController keyStateController;
@@ -14,18 +14,18 @@ void TabHoldAction::execute(absolute_time_t timestamp) {
         hidKeyboard.unblockNewKeys(blockingReference);
         areKeysBlocked = false;
     }
-    if (const KeyState& currentState = keyStateController.getKeyState(activationKeyId); !isHoldActive && currentState.
-        isPressed &&
-        currentState.totalPressCount == activationState.totalPressCount) {
+    if (const KeyState &currentState = keyStateController.getKeyState(activationKeyId);
+        !isHoldActive && currentState.isPressed && currentState.totalPressCount == activationState.totalPressCount) {
         holdAction->execute(activationKeyId, &activationState, activationTimestamp);
         isHoldActive = true;
     }
     task = nullptr;
 }
 
-void TabHoldAction::onKeyStateChange(const uint8_t keyId, const KeyState& state, const absolute_time_t timestamp) {
+void TabHoldAction::onKeyStateChange(const uint8_t keyId, const KeyState &state, const absolute_time_t timestamp) {
     if (activationKeyId == keyId) {
-        if (state.isPressed) return;
+        if (state.isPressed)
+            return;
 
         if (timestamp < activationTimestamp + tabTimeout) {
             tabAction->execute(activationKeyId, &activationState, activationTimestamp);
@@ -39,8 +39,8 @@ void TabHoldAction::onKeyStateChange(const uint8_t keyId, const KeyState& state,
             task = scheduler.addTask(this, timestamp + 10000);
         }
     } else if (!isHoldActive && holdOnPressRelease && !state.isPressed && state.pressTime > activationTimestamp) {
-        if (const KeyState& currentState = keyStateController.getKeyState(activationKeyId); currentState.isPressed &&
-            currentState.totalPressCount == activationState.totalPressCount) {
+        if (const KeyState &currentState = keyStateController.getKeyState(activationKeyId);
+            currentState.isPressed && currentState.totalPressCount == activationState.totalPressCount) {
             holdAction->execute(activationKeyId, &activationState, activationTimestamp);
             isHoldActive = true;
         }
@@ -56,22 +56,14 @@ void TabHoldAction::onKeyStateChange(const uint8_t keyId, const KeyState& state,
     }
 }
 
-TabHoldAction::TabHoldAction(std::unique_ptr<IKeyAction> tabAction,
-                             std::unique_ptr<IKeyAction> holdAction,
-                             const uint64_t tabTimeout,
-                             const uint64_t holdTimeout,
-                             const uint64_t tabHoldTimeout,
-                             const bool holdOnPressRelease,
-                             const bool blockOtherKeys)
-    : tabAction(std::move(tabAction)),
-      holdAction(std::move(holdAction)),
-      tabTimeout(tabTimeout),
-      holdTimeout(holdTimeout),
-      tabHoldTimeout(tabHoldTimeout),
-      holdOnPressRelease(holdOnPressRelease),
+TabHoldAction::TabHoldAction(std::unique_ptr<IKeyAction> tabAction, std::unique_ptr<IKeyAction> holdAction,
+                             const uint64_t tabTimeout, const uint64_t holdTimeout, const uint64_t tabHoldTimeout,
+                             const bool holdOnPressRelease, const bool blockOtherKeys)
+    : tabAction(std::move(tabAction)), holdAction(std::move(holdAction)), tabTimeout(tabTimeout),
+      holdTimeout(holdTimeout), tabHoldTimeout(tabHoldTimeout), holdOnPressRelease(holdOnPressRelease),
       blockOtherKeys(blockOtherKeys) {}
 
-void TabHoldAction::execute(const uint8_t keyId, const KeyState* state, const absolute_time_t timestamp) {
+void TabHoldAction::execute(const uint8_t keyId, const KeyState *state, const absolute_time_t timestamp) {
     if (task != nullptr) {
         task->cancel();
         task = nullptr;

@@ -24,7 +24,7 @@ class PongGame {
     State currentState;
     State oldState;
 
-    void drawState(const State& state, uint16_t color) const;
+    void drawState(const State &state, uint16_t color) const;
 
     void updatePosition(const RotaryEncoder *enc, int32_t &lastRotation, int &pos) const;
 

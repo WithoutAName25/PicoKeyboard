@@ -12,20 +12,20 @@ class HeatmapEffect final : public IRGBEffect, IExecutable {
     uint32_t heatingOnPress;
     uint32_t heatingRateOnHold;
     bool mirrored;
-    LedConfig* leds = nullptr;
-    LedConfig* mirroredLeds = nullptr;
+    LedConfig *leds = nullptr;
+    LedConfig *mirroredLeds = nullptr;
     uint8_t numLEDs = 0;
     std::map<uint8_t, uint8_t> inverseIdMap{};
     std::unique_ptr<uint64_t[]> heatMap = nullptr;
     float maxHeat = 0;
-    Task* task = nullptr;
+    Task *task = nullptr;
     absolute_time_t lastTick = 0;
 
-    void serialize(InterDeviceCommunicator& communicator) override;
+    void serialize(InterDeviceCommunicator &communicator) override;
 
-    Color getColor(LedConfig& led, absolute_time_t timestamp) override;
+    Color getColor(LedConfig &led, absolute_time_t timestamp) override;
 
-    void enable(LedConfig* leds, LedConfig* mirroredLeds, uint8_t numLEDs) override;
+    void enable(LedConfig *leds, LedConfig *mirroredLeds, uint8_t numLEDs) override;
 
     void disable() override;
 
@@ -34,9 +34,8 @@ class HeatmapEffect final : public IRGBEffect, IExecutable {
     [[nodiscard]] uint64_t getHeatDelta(uint8_t keyId) const;
 
 public:
-    HeatmapEffect(const Color& hot, const Color& cold,
-                  float coolingFactor, uint32_t heatingOnPress, uint32_t heatingRateOnHold,
-                  bool mirrored);
+    HeatmapEffect(const Color &hot, const Color &cold, float coolingFactor, uint32_t heatingOnPress,
+                  uint32_t heatingRateOnHold, bool mirrored);
 
-    explicit HeatmapEffect(InterDeviceCommunicator& communicator);
+    explicit HeatmapEffect(InterDeviceCommunicator &communicator);
 };

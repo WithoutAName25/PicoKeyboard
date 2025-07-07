@@ -12,9 +12,9 @@ class RGBEffectCommand final : public Command {
 public:
     static constexpr uint16_t ID = static_cast<uint16_t>(PrimaryToSecondaryCommandIDs::RGB_EFFECT);
 
-    explicit RGBEffectCommand(const std::shared_ptr<IRGBEffect>& effect, uint64_t fadeTime);
+    explicit RGBEffectCommand(const std::shared_ptr<IRGBEffect> &effect, uint64_t fadeTime);
 
-    explicit RGBEffectCommand(InterDeviceCommunicator& communicator);
+    explicit RGBEffectCommand(InterDeviceCommunicator &communicator);
 
-    void send(InterDeviceCommunicator& communicator) override;
+    void send(InterDeviceCommunicator &communicator) override;
 };

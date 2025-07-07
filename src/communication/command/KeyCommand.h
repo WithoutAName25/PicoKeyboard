@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Command.h"
 #include "../InterDeviceCommunicator.h"
+#include "Command.h"
 
 class KeyCommand final : public Command {
     bool isPressed;
@@ -14,7 +14,7 @@ public:
 
     KeyCommand(bool isPressed, uint8_t keyId);
 
-    explicit KeyCommand(InterDeviceCommunicator& communicator);
+    explicit KeyCommand(InterDeviceCommunicator &communicator);
 
-    void send(InterDeviceCommunicator& communicator) override;
+    void send(InterDeviceCommunicator &communicator) override;
 };

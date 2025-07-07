@@ -1,20 +1,11 @@
 #pragma once
 
+#include "../usb_descriptors.h"
 #include "HIDController.h"
 #include "tusb.h"
-#include "../usb_descriptors.h"
 #include <list>
 
-enum class Modifier {
-    LEFT_CTRL,
-    LEFT_SHIFT,
-    LEFT_ALT,
-    LEFT_GUI,
-    RIGHT_CTRL,
-    RIGHT_SHIFT,
-    RIGHT_ALT,
-    RIGHT_GUI
-};
+enum class Modifier { LEFT_CTRL, LEFT_SHIFT, LEFT_ALT, LEFT_GUI, RIGHT_CTRL, RIGHT_SHIFT, RIGHT_ALT, RIGHT_GUI };
 
 struct KeyPressState {
     uint8_t keycode;
@@ -23,7 +14,7 @@ struct KeyPressState {
     bool reported;
 
     KeyPressState(const uint8_t keycode, const uint8_t count, const absolute_time_t activation)
-            : keycode(keycode), count(count), activation(activation), reported(false) {}
+        : keycode(keycode), count(count), activation(activation), reported(false) {}
 };
 
 using KeyBlockingReference = std::list<absolute_time_t>::iterator;

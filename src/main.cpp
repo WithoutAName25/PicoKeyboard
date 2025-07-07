@@ -1,9 +1,9 @@
+#include "main.h"
 #include "LCDLibrary.h"
 #include "communication.h"
 #include "keys.h"
 #include "rgb.h"
 #include "rgb_effects.h"
-#include "main.h"
 
 #include <valarray>
 
@@ -23,8 +23,8 @@ bool isPrimary = false;
 
 PicoKeyboardConfig config = getKeyboardConfig();
 
-PicoKeyboardDeviceConfig& deviceConfig = *(isPrimary ? config.primary : config.secondary);
-PicoKeyboardDeviceConfig& otherDeviceConfig = *(isPrimary ? config.secondary : config.primary);
+PicoKeyboardDeviceConfig &deviceConfig = *(isPrimary ? config.primary : config.secondary);
+PicoKeyboardDeviceConfig &otherDeviceConfig = *(isPrimary ? config.secondary : config.primary);
 
 Scheduler scheduler;
 
@@ -37,7 +37,7 @@ RGBController rgbController(deviceConfig.leds, config.isMirrored ? otherDeviceCo
 
 KeyStateController keyStateController(config.totalNumKeys);
 
-IKeyListener* keyListener;
+IKeyListener *keyListener;
 
 #ifdef KEYBOARD_PRIMARY
 KeyActionController keyActionController(config.totalNumKeys, keyStateController);
@@ -70,14 +70,12 @@ int main() {
     rgb_init(pio0, deviceConfig.ledPin);
 
     if (deviceConfig.display != nullptr) {
-        const DisplayConfig& display = *deviceConfig.display;
+        const DisplayConfig &display = *deviceConfig.display;
 
-        HardwareSPIInterface lcd_spi(display.spiInst, display.dataPin, display.clockPin,
-                                     display.chipSelectPin, display.dataCommandPin);
-        LCDDirectGraphics lcd(&lcd_spi, display.resetPin, display.backlightPin,
-                              display.hwXOffset,
-                              display.hwYOffset, display.hwWidth, display.hwHeight,
-                              display.rotation);
+        HardwareSPIInterface lcd_spi(display.spiInst, display.dataPin, display.clockPin, display.chipSelectPin,
+                                     display.dataCommandPin);
+        LCDDirectGraphics lcd(&lcd_spi, display.resetPin, display.backlightPin, display.hwXOffset, display.hwYOffset,
+                              display.hwWidth, display.hwHeight, display.rotation);
         lcd.init();
         lcd.setBrightness(0);
         lcd.clear(0);
@@ -111,9 +109,9 @@ int main() {
 #endif
 
     config.configureStartup(
-        [](const absolute_time_t time, const std::function<void(absolute_time_t timestamp)>& block) {
+        [](const absolute_time_t time, const std::function<void(absolute_time_t timestamp)> &block) {
             // ReSharper disable once CppUseAuto
-            LambdaExecutable* task = // NOLINT(*-use-auto)
+            LambdaExecutable *task = // NOLINT(*-use-auto)
                 new LambdaExecutable([block, task](const absolute_time_t timestamp) {
                     block(timestamp);
                     delete task;

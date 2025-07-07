@@ -23,8 +23,8 @@ public:
     static Color FromRGB(uint8_t red, uint8_t green, uint8_t blue);
     static Color FromHSV(uint16_t hue, float saturation, float value);
 
-    Color(const Color& other) = default;
-    Color& operator=(const Color& other) = default;
+    Color(const Color &other) = default;
+    Color &operator=(const Color &other) = default;
 
     [[nodiscard]] uint8_t red() const;
     [[nodiscard]] uint8_t green() const;
@@ -40,8 +40,8 @@ public:
     float saturation();
     float value();
 
-    explicit Color(InterDeviceCommunicator& communicator);
-    void serialize(InterDeviceCommunicator& communicator) const;
+    explicit Color(InterDeviceCommunicator &communicator);
+    void serialize(InterDeviceCommunicator &communicator) const;
 
     uint32_t toPixelFormat();
     uint32_t toPixelFormatW(uint8_t white = 0);
@@ -64,7 +64,7 @@ public:
     static Color None();
 
     static Color temperature(uint16_t kelvin);
-    static Color interpolateHSV(const Color& from, const Color& to, float t);
-    static Color interpolateRGB(const Color& from, const Color& to, float t);
-    static Color interpolate(const Color& from, const Color& to, float t);
+    static Color interpolateHSV(const Color &from, const Color &to, float t);
+    static Color interpolateRGB(const Color &from, const Color &to, float t);
+    static Color interpolate(const Color &from, const Color &to, float t);
 };

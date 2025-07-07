@@ -8,7 +8,7 @@
 
 class InterDeviceCommunicator;
 
-enum class EffectType: uint8_t {
+enum class EffectType : uint8_t {
     FADING,
     HEATMAP,
     KEY_STATE,
@@ -27,17 +27,17 @@ public:
 
     virtual ~IRGBEffect() = default;
 
-    virtual void serialize(InterDeviceCommunicator& communicator);
+    virtual void serialize(InterDeviceCommunicator &communicator);
 
-    static std::shared_ptr<IRGBEffect> create(InterDeviceCommunicator& communicator);
+    static std::shared_ptr<IRGBEffect> create(InterDeviceCommunicator &communicator);
 
-    virtual void enable(LedConfig* leds, LedConfig* mirroredLeds, uint8_t numLEDs) {}
+    virtual void enable(LedConfig *leds, LedConfig *mirroredLeds, uint8_t numLEDs) {}
 
     virtual void disable() {}
 
     virtual void update(absolute_time_t timestamp) {}
 
-    virtual Color getColor(LedConfig& led, absolute_time_t timestamp) = 0;
+    virtual Color getColor(LedConfig &led, absolute_time_t timestamp) = 0;
 };
 
 template <typename T>

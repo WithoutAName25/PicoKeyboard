@@ -8,29 +8,30 @@
 extern KeyStateController keyStateController;
 extern Scheduler scheduler;
 
-void HeatmapEffect::serialize(InterDeviceCommunicator& communicator) {
+void HeatmapEffect::serialize(InterDeviceCommunicator &communicator) {
     IRGBEffect::serialize(communicator);
     hot.serialize(communicator);
     cold.serialize(communicator);
-    communicator.send32(*reinterpret_cast<uint32_t*>(&coolingFactor));
+    communicator.send32(*reinterpret_cast<uint32_t *>(&coolingFactor));
     communicator.send32(heatingOnPress);
     communicator.send32(heatingRateOnHold);
     communicator.send(mirrored);
 }
 
-
-Color HeatmapEffect::getColor(LedConfig& led, const absolute_time_t timestamp) {
-    const uint64_t maxValue = std::max(static_cast<uint64_t>(maxHeat),
-                                       static_cast<uint64_t>(heatingOnPress + heatingRateOnHold * 100 + 1));
+Color HeatmapEffect::getColor(LedConfig &led, const absolute_time_t timestamp) {
+    const uint64_t maxValue =
+        std::max(static_cast<uint64_t>(maxHeat), static_cast<uint64_t>(heatingOnPress + heatingRateOnHold * 100 + 1));
     const uint64_t heat = heatMap[inverseIdMap[led.id]];
-    if (heat == 0) return cold;
-    if (heat >= maxValue) return hot;
+    if (heat == 0)
+        return cold;
+    if (heat >= maxValue)
+        return hot;
 
     const float ratio = static_cast<float>(heat) / static_cast<float>(maxValue);
     return Color::interpolate(cold, hot, ratio);
 }
 
-void HeatmapEffect::enable(LedConfig* leds, LedConfig* mirroredLeds, const uint8_t numLEDs) {
+void HeatmapEffect::enable(LedConfig *leds, LedConfig *mirroredLeds, const uint8_t numLEDs) {
     IRGBEffect::enable(leds, mirroredLeds, numLEDs);
 
     this->leds = leds;
@@ -78,10 +79,9 @@ void HeatmapEffect::execute(const absolute_time_t timestamp) {
         currentMaxHeat = std::max(currentMaxHeat, heatMap[i]);
     }
 
-
-    maxHeat = std::max(
-        static_cast<float>(currentMaxHeat),
-        (maxHeat * (1 - coolingFactor * 0.5f)) + (static_cast<float>(currentMaxHeat) * coolingFactor * 0.5f));
+    maxHeat =
+        std::max(static_cast<float>(currentMaxHeat),
+                 (maxHeat * (1 - coolingFactor * 0.5f)) + (static_cast<float>(currentMaxHeat) * coolingFactor * 0.5f));
     lastTick = timestamp;
 }
 
@@ -96,20 +96,15 @@ uint64_t HeatmapEffect::getHeatDelta(const uint8_t keyId) const {
     return delta;
 }
 
-HeatmapEffect::HeatmapEffect(
-    const Color& hot, const Color& cold,
-    const float coolingFactor, const uint32_t heatingOnPress, const uint32_t heatingRateOnHold,
-    const bool mirrored)
-    : IRGBEffect(EffectType::HEATMAP),
-      hot(hot), cold(cold),
-      coolingFactor(coolingFactor), heatingOnPress(heatingOnPress), heatingRateOnHold(heatingRateOnHold),
-      mirrored(mirrored) {}
+HeatmapEffect::HeatmapEffect(const Color &hot, const Color &cold, const float coolingFactor,
+                             const uint32_t heatingOnPress, const uint32_t heatingRateOnHold, const bool mirrored)
+    : IRGBEffect(EffectType::HEATMAP), hot(hot), cold(cold), coolingFactor(coolingFactor),
+      heatingOnPress(heatingOnPress), heatingRateOnHold(heatingRateOnHold), mirrored(mirrored) {}
 
-HeatmapEffect::HeatmapEffect(InterDeviceCommunicator& communicator)
-    : IRGBEffect(EffectType::HEATMAP),
-      hot(Color(communicator)), cold(Color(communicator)) {
+HeatmapEffect::HeatmapEffect(InterDeviceCommunicator &communicator)
+    : IRGBEffect(EffectType::HEATMAP), hot(Color(communicator)), cold(Color(communicator)) {
     uint32_t coolingFactorRaw = communicator.receive32();
-    coolingFactor = *reinterpret_cast<float*>(&coolingFactorRaw);
+    coolingFactor = *reinterpret_cast<float *>(&coolingFactorRaw);
     heatingOnPress = communicator.receive32();
     heatingRateOnHold = communicator.receive32();
     mirrored = communicator.receive();

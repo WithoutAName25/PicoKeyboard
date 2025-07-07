@@ -1,8 +1,8 @@
 #pragma once
 
+#include "../KeyActionController.h"
 #include "../KeyLayer.h"
 #include "PressReleaseAction.h"
-#include "../KeyActionController.h"
 
 class [[maybe_unused]] OverlayLayerAction final : public PressReleaseAction {
     KeyLayer &layer;

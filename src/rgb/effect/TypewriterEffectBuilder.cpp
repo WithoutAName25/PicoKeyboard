@@ -2,24 +2,13 @@
 
 #include <map>
 
-TypewriterEffect::TypewriterEffect(
-    const uint16_t keyPressMs,
-    const uint16_t holdPreTimeMs,
-    const uint16_t holdPostTimeMs,
-    const uint16_t keyGapMs,
-    const uint16_t fadeInMs,
-    const uint16_t fadeOutMs,
-    const Color& color
-) : keyPressMs(keyPressMs),
-    holdPreTimeMs(holdPreTimeMs),
-    holdPostTimeMs(holdPostTimeMs),
-    keyGapMs(keyGapMs),
-    fadeInMs(fadeInMs),
-    fadeOutMs(fadeOutMs),
-    color(color),
-    currentTimeMs(fadeInMs) {}
+TypewriterEffect::TypewriterEffect(const uint16_t keyPressMs, const uint16_t holdPreTimeMs,
+                                   const uint16_t holdPostTimeMs, const uint16_t keyGapMs, const uint16_t fadeInMs,
+                                   const uint16_t fadeOutMs, const Color &color)
+    : keyPressMs(keyPressMs), holdPreTimeMs(holdPreTimeMs), holdPostTimeMs(holdPostTimeMs), keyGapMs(keyGapMs),
+      fadeInMs(fadeInMs), fadeOutMs(fadeOutMs), color(color), currentTimeMs(fadeInMs) {}
 
-TypewriterEffect& TypewriterEffect::pressKey(uint8_t keyId) {
+TypewriterEffect &TypewriterEffect::pressKey(uint8_t keyId) {
     if (needsGap) {
         currentTimeMs += keyGapMs;
         needsGap = false;
@@ -35,12 +24,12 @@ TypewriterEffect& TypewriterEffect::pressKey(uint8_t keyId) {
     return *this;
 }
 
-TypewriterEffect& TypewriterEffect::delay(const uint64_t delayMs) {
+TypewriterEffect &TypewriterEffect::delay(const uint64_t delayMs) {
     currentTimeMs += delayMs;
     return *this;
 }
 
-TypewriterEffect& TypewriterEffect::holdKey(uint8_t keyId) {
+TypewriterEffect &TypewriterEffect::holdKey(uint8_t keyId) {
     if (needsGap) {
         currentTimeMs += keyGapMs;
         needsGap = false;
@@ -53,7 +42,7 @@ TypewriterEffect& TypewriterEffect::holdKey(uint8_t keyId) {
     return *this;
 }
 
-TypewriterEffect& TypewriterEffect::holdKeysSimultaneously(const std::vector<uint8_t>& keyIds) {
+TypewriterEffect &TypewriterEffect::holdKeysSimultaneously(const std::vector<uint8_t> &keyIds) {
     if (needsGap) {
         currentTimeMs += keyGapMs;
         needsGap = false;
@@ -68,7 +57,7 @@ TypewriterEffect& TypewriterEffect::holdKeysSimultaneously(const std::vector<uin
     return *this;
 }
 
-TypewriterEffect& TypewriterEffect::releaseKey(uint8_t keyId) {
+TypewriterEffect &TypewriterEffect::releaseKey(uint8_t keyId) {
     currentTimeMs += holdPostTimeMs;
 
     keyEvents.emplace_back(keyId, currentTimeMs, KeyEvent::Type::RELEASE, true);
@@ -76,7 +65,7 @@ TypewriterEffect& TypewriterEffect::releaseKey(uint8_t keyId) {
     return *this;
 }
 
-TypewriterEffect& TypewriterEffect::releaseKeysSimultaneously(const std::vector<uint8_t>& keyIds) {
+TypewriterEffect &TypewriterEffect::releaseKeysSimultaneously(const std::vector<uint8_t> &keyIds) {
     currentTimeMs += holdPostTimeMs;
 
     for (const uint8_t keyId : keyIds) {
@@ -86,7 +75,7 @@ TypewriterEffect& TypewriterEffect::releaseKeysSimultaneously(const std::vector<
     return *this;
 }
 
-TypewriterEffect& TypewriterEffect::typeKeys(const std::vector<uint8_t>& keyIds) {
+TypewriterEffect &TypewriterEffect::typeKeys(const std::vector<uint8_t> &keyIds) {
     for (const uint8_t keyId : keyIds) {
         pressKey(keyId);
     }
@@ -103,21 +92,14 @@ std::vector<SequenceStep> TypewriterEffect::generateSequence() {
 
     std::map<uint8_t, uint64_t> pressStartTimes;
 
-    for (const auto& event : keyEvents) {
+    for (const auto &event : keyEvents) {
         switch (event.type) {
         case KeyEvent::Type::PRESS:
             pressStartTimes[event.keyId] = event.timeMs;
             break;
         case KeyEvent::Type::RELEASE:
-            steps.emplace_back(
-                event.keyId,
-                false,
-                pressStartTimes[event.keyId] - fadeInMs,
-                color,
-                event.timeMs - pressStartTimes[event.keyId],
-                fadeInMs,
-                fadeOutMs
-            );
+            steps.emplace_back(event.keyId, false, pressStartTimes[event.keyId] - fadeInMs, color,
+                               event.timeMs - pressStartTimes[event.keyId], fadeInMs, fadeOutMs);
             break;
         }
     }

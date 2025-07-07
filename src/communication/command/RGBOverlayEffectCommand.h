@@ -12,11 +12,11 @@ class RGBOverlayEffectCommand final : public Command {
 public:
     static constexpr uint16_t ID = static_cast<uint16_t>(PrimaryToSecondaryCommandIDs::RGB_OVERLAY_EFFECT);
 
-    explicit RGBOverlayEffectCommand(const std::shared_ptr<IRGBEffect>& effect);
+    explicit RGBOverlayEffectCommand(const std::shared_ptr<IRGBEffect> &effect);
 
     explicit RGBOverlayEffectCommand(uint16_t indexToRemove);
 
-    explicit RGBOverlayEffectCommand(InterDeviceCommunicator& communicator);
+    explicit RGBOverlayEffectCommand(InterDeviceCommunicator &communicator);
 
-    void send(InterDeviceCommunicator& communicator) override;
+    void send(InterDeviceCommunicator &communicator) override;
 };

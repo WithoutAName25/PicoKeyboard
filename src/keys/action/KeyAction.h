@@ -4,6 +4,7 @@
 
 class KeyAction final : public PressReleaseAction {
     uint8_t keycode;
+
 public:
     explicit KeyAction(uint8_t keycode);
 

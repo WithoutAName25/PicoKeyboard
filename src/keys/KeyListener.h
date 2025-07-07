@@ -2,10 +2,10 @@
 
 #include <memory>
 
-#include "IKeyListener.h"
-#include "pico/stdlib.h"
-#include "KeyStateController.h"
 #include "../util/IExecutable.h"
+#include "IKeyListener.h"
+#include "KeyStateController.h"
+#include "pico/stdlib.h"
 
 struct HWKeyConfig {
     uint8_t pin;
@@ -15,10 +15,10 @@ struct HWKeyConfig {
 };
 
 class KeyListener final : public IKeyListener {
-    HWKeyConfig* keys;
+    HWKeyConfig *keys;
 
 public:
-    KeyListener(KeyStateController& controller, uint8_t numKeys, HWKeyConfig* keys);
+    KeyListener(KeyStateController &controller, uint8_t numKeys, HWKeyConfig *keys);
 
     void setupPins() override;
 

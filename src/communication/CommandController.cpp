@@ -23,10 +23,11 @@ void CommandController::execute(const absolute_time_t timestamp) {
     }
 }
 
-CommandController::CommandController(InterDeviceCommunicator& communicator, const bool isPrimary) : communicator(
-    communicator) {
+CommandController::CommandController(InterDeviceCommunicator &communicator, const bool isPrimary)
+    : communicator(communicator) {
     listenFor<KeyCommand>();
-    if (isPrimary) {} else {
+    if (isPrimary) {
+    } else {
         listenFor<RGBBrightnessCommand>();
         listenFor<RGBEffectCommand>();
         listenFor<RGBOverlayEffectCommand>();

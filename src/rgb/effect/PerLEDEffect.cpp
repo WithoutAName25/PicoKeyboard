@@ -3,19 +3,19 @@
 #include <ranges>
 #include <utility>
 
-#include "StaticRGBEffect.h"
 #include "../RGBController.h"
+#include "StaticRGBEffect.h"
 
-void PerLEDEffect::serialize(InterDeviceCommunicator& communicator) {
+void PerLEDEffect::serialize(InterDeviceCommunicator &communicator) {
     IRGBEffect::serialize(communicator);
- const uint8_t numEffects = idToEffect.size();
+    const uint8_t numEffects = idToEffect.size();
     communicator.send(numEffects);
     for (int i = 0; i < numEffects; ++i) {
         idToEffect[i]->serialize(communicator);
     }
 
     communicator.send(effectPerLED.size());
-    for (const auto& [ledId, effect] : effectPerLED) {
+    for (const auto &[ledId, effect] : effectPerLED) {
         communicator.send(ledId);
         communicator.send(effectToId.find(effect)->second);
     }
@@ -27,34 +27,37 @@ void PerLEDEffect::serialize(InterDeviceCommunicator& communicator) {
     }
 }
 
-Color PerLEDEffect::getColor(LedConfig& led, const absolute_time_t timestamp) {
+Color PerLEDEffect::getColor(LedConfig &led, const absolute_time_t timestamp) {
     if (effectPerLED.contains(led.id)) {
         return effectPerLED[led.id]->getColor(led, timestamp);
     }
 
-    if (fallback != nullptr) return fallback->getColor(led, timestamp);
+    if (fallback != nullptr)
+        return fallback->getColor(led, timestamp);
 
     return Color::None();
 }
 
-void PerLEDEffect::enable(LedConfig* leds, LedConfig* mirroredLeds, const uint8_t numLEDs) {
+void PerLEDEffect::enable(LedConfig *leds, LedConfig *mirroredLeds, const uint8_t numLEDs) {
     IRGBEffect::enable(leds, mirroredLeds, numLEDs);
 
-    for (auto& effect : effectToId | std::views::keys) {
+    for (auto &effect : effectToId | std::views::keys) {
         effect->enable(leds, mirroredLeds, numLEDs);
     }
 
-    if (fallback != nullptr) fallback->enable(leds, mirroredLeds, numLEDs);
+    if (fallback != nullptr)
+        fallback->enable(leds, mirroredLeds, numLEDs);
 }
 
 void PerLEDEffect::disable() {
     IRGBEffect::disable();
 
-    for (auto& effect : effectToId | std::views::keys) {
+    for (auto &effect : effectToId | std::views::keys) {
         effect->disable();
     }
 
-    if (fallback != nullptr) fallback->disable();
+    if (fallback != nullptr)
+        fallback->disable();
 }
 
 PerLEDEffect::PerLEDEffect(
@@ -62,7 +65,7 @@ PerLEDEffect::PerLEDEffect(
     std::shared_ptr<IRGBEffect> fallback)
     : IRGBEffect(EffectType::PER_LED), effectPerLED(effectPerLED), fallback(std::move(fallback)) {
     uint8_t id = 0;
-    for (auto& effect : this->effectPerLED | std::views::values) {
+    for (auto &effect : this->effectPerLED | std::views::values) {
         if (!effectToId.contains(effect)) {
             effectToId.emplace(effect, id);
             idToEffect.emplace(id, effect);
@@ -71,7 +74,7 @@ PerLEDEffect::PerLEDEffect(
     }
 }
 
-PerLEDEffect::PerLEDEffect(InterDeviceCommunicator& communicator) : IRGBEffect(EffectType::PER_LED) {
+PerLEDEffect::PerLEDEffect(InterDeviceCommunicator &communicator) : IRGBEffect(EffectType::PER_LED) {
     const uint8_t numEffects = communicator.receive();
     for (int i = 0; i < numEffects; ++i) {
         std::shared_ptr<IRGBEffect> effect = create(communicator);

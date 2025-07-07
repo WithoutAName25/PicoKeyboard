@@ -1,6 +1,6 @@
 #include "KeyListener.h"
 
-KeyListener::KeyListener(KeyStateController& controller, uint8_t numKeys, HWKeyConfig* keys)
+KeyListener::KeyListener(KeyStateController &controller, uint8_t numKeys, HWKeyConfig *keys)
     : IKeyListener(controller, numKeys), keys(keys) {}
 
 void KeyListener::setupPins() {
@@ -14,7 +14,7 @@ void KeyListener::setupPins() {
 
 void KeyListener::execute(const absolute_time_t timestamp) {
     for (int i = 0; i < numKeys; ++i) {
-        const HWKeyConfig& key = keys[i];
+        const HWKeyConfig &key = keys[i];
         const bool isPressed = !gpio_get(key.pin);
         controller.updateKeyState(key.id, isPressed, timestamp, true);
     }

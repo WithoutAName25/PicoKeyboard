@@ -2,13 +2,9 @@
 
 HIDConsumerControl::HIDConsumerControl() = default;
 
-void HIDConsumerControl::sendCommand(const uint16_t command) {
-    queue.push(command);
-}
+void HIDConsumerControl::sendCommand(const uint16_t command) { queue.push(command); }
 
-bool HIDConsumerControl::hasReport() {
-    return !queue.empty() || !lastReportEmpty;
-}
+bool HIDConsumerControl::hasReport() { return !queue.empty() || !lastReportEmpty; }
 
 uint16_t HIDConsumerControl::getReport() {
     if (!queue.empty()) {

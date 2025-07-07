@@ -1,6 +1,6 @@
 #include "neopixel.h"
-#include "neopixel.pio.h"
 #include "hardware/clocks.h"
+#include "neopixel.pio.h"
 
 auto currentPio = pio0;
 uint currentSM = 0;
@@ -28,6 +28,4 @@ void rgb_init(PIO pio, const uint pin) {
     currentSM = sm;
 }
 
-void rgb_put_pixel(const uint32_t pixel_grbw) {
-    pio_sm_put_blocking(currentPio, currentSM, pixel_grbw);
-}
+void rgb_put_pixel(const uint32_t pixel_grbw) { pio_sm_put_blocking(currentPio, currentSM, pixel_grbw); }

@@ -23,14 +23,14 @@
  *
  */
 
-#include <algorithm>
-#include "tusb.h"
-#include "usb_descriptors.h"
 #include "controller/HIDCommunication.h"
 #include "controller/HIDConsumerControl.h"
 #include "controller/HIDGamepad.h"
 #include "controller/HIDKeyboard.h"
 #include "controller/HIDMouse.h"
+#include "tusb.h"
+#include "usb_descriptors.h"
+#include <algorithm>
 
 extern HIDKeyboard hidKeyboard;
 extern HIDMouse hidMouse;
@@ -38,7 +38,7 @@ extern HIDConsumerControl hidConsumerControl;
 extern HIDGamepad hidGamepad;
 extern HIDCommunication hidCommunication;
 
-uint16_t writeToBuffer(const void* report, const uint16_t reportLen, void* buffer, const uint16_t bufferLen) {
+uint16_t writeToBuffer(const void *report, const uint16_t reportLen, void *buffer, const uint16_t bufferLen) {
     const uint16_t size = std::min(reportLen, bufferLen);
     memcpy(buffer, report, size);
     return size;
@@ -48,8 +48,7 @@ uint16_t writeToBuffer(const void* report, const uint16_t reportLen, void* buffe
 // Application must fill buffer report's content and return its length.
 // Return zero will cause the stack to STALL request
 uint16_t tud_hid_get_report_cb(uint8_t instance, const uint8_t report_id, const hid_report_type_t report_type,
-                               uint8_t* buffer,
-                               const uint16_t reqlen) {
+                               uint8_t *buffer, const uint16_t reqlen) {
     if (report_type == HID_REPORT_TYPE_INPUT) {
         switch (report_id) {
         case REPORT_ID_KEYBOARD: {
@@ -82,8 +81,7 @@ uint16_t tud_hid_get_report_cb(uint8_t instance, const uint8_t report_id, const 
 // Invoked when received SET_REPORT control request or
 // received data on OUT endpoint ( Report ID = 0, Type = 0 )
 void tud_hid_set_report_cb(const uint8_t instance, const uint8_t report_id, const hid_report_type_t report_type,
-                           uint8_t const* buffer,
-                           const uint16_t bufsize) {
+                           uint8_t const *buffer, const uint16_t bufsize) {
     (void)instance;
     (void)report_id;
     (void)report_type;

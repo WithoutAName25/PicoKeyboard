@@ -1,7 +1,7 @@
 #pragma once
 
-#include "HIDController.h"
 #include "../usb_descriptors.h"
+#include "HIDController.h"
 
 class HIDConsumerControl final : public HIDController<uint16_t, REPORT_ID_CONSUMER_CONTROL> {
     std::queue<uint16_t> queue;

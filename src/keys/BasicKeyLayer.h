@@ -13,7 +13,7 @@ class BasicKeyLayer : public KeyLayer {
     OverlayEffectReference overlayEffect;
 
 protected:
-    [[nodiscard]] IKeyAction* getAction(uint8_t keyId) const override;
+    [[nodiscard]] IKeyAction *getAction(uint8_t keyId) const override;
 
     void enable() override;
     void disable() override;
@@ -21,8 +21,7 @@ protected:
 public:
     explicit BasicKeyLayer(uint8_t numKeys, std::shared_ptr<IRGBEffect> effect = nullptr);
 
-    template <KeyActionType T>
-    void setAction(const uint8_t keyId, T action) {
+    template <KeyActionType T> void setAction(const uint8_t keyId, T action) {
         actions[keyId] = std::make_unique<T>(std::move(action));
     }
 };

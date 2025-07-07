@@ -1,8 +1,8 @@
 #pragma once
 
-#include <vector>
-#include <memory>
 #include "SequenceEffect.h"
+#include <memory>
+#include <vector>
 
 class TypewriterEffect {
     struct KeyEvent {
@@ -31,27 +31,21 @@ class TypewriterEffect {
     std::vector<SequenceStep> generateSequence();
 
 public:
-    explicit TypewriterEffect(
-        uint16_t keyPressMs = 250,
-        uint16_t holdPreTimeMs = 500,
-        uint16_t holdPostTimeMs = 350,
-        uint16_t keyGapMs = 350,
-        uint16_t fadeInMs = 0,
-        uint16_t fadeOutMs = 500,
-        const Color& color = Color::FromRGB(0, 0, 255)
-    );
+    explicit TypewriterEffect(uint16_t keyPressMs = 250, uint16_t holdPreTimeMs = 500, uint16_t holdPostTimeMs = 350,
+                              uint16_t keyGapMs = 350, uint16_t fadeInMs = 0, uint16_t fadeOutMs = 500,
+                              const Color &color = Color::FromRGB(0, 0, 255));
 
-    TypewriterEffect& pressKey(uint8_t keyId);
+    TypewriterEffect &pressKey(uint8_t keyId);
 
-    TypewriterEffect& delay(uint64_t delayMs);
+    TypewriterEffect &delay(uint64_t delayMs);
 
-    TypewriterEffect& holdKey(uint8_t keyId);
-    TypewriterEffect& holdKeysSimultaneously(const std::vector<uint8_t>& keyIds);
+    TypewriterEffect &holdKey(uint8_t keyId);
+    TypewriterEffect &holdKeysSimultaneously(const std::vector<uint8_t> &keyIds);
 
-    TypewriterEffect& releaseKey(uint8_t keyId);
-    TypewriterEffect& releaseKeysSimultaneously(const std::vector<uint8_t>& keyIds);
+    TypewriterEffect &releaseKey(uint8_t keyId);
+    TypewriterEffect &releaseKeysSimultaneously(const std::vector<uint8_t> &keyIds);
 
-    TypewriterEffect& typeKeys(const std::vector<uint8_t>& keyIds);
+    TypewriterEffect &typeKeys(const std::vector<uint8_t> &keyIds);
 
     std::shared_ptr<SequenceEffect> build(absolute_time_t startTime, bool looping = true);
 };

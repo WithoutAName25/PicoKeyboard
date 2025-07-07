@@ -7,19 +7,18 @@
 
 extern CommandController commandController;
 
-ListenerPriority IKeyStateListener::getPriority() const {
-    return ListenerPriority::WITH_KEYBOARD_CONTROLLER;
-}
+ListenerPriority IKeyStateListener::getPriority() const { return ListenerPriority::WITH_KEYBOARD_CONTROLLER; }
 
-KeyStateController::KeyStateController(const uint8_t numKeys)
-    : keyStates(new KeyState[numKeys]) {}
+KeyStateController::KeyStateController(const uint8_t numKeys) : keyStates(new KeyState[numKeys]) {}
 
 void KeyStateController::updateKeyState(const uint8_t keyId, const bool isPressed, const absolute_time_t timestamp,
                                         const bool localKey) {
-    KeyState& state = keyStates[keyId];
+    KeyState &state = keyStates[keyId];
 
-    if (state.isPressed == isPressed) return;
-    if (std::max(state.pressTime, state.releaseTime) + MIN_TIME_BETWEEN_STATE_CHANGES > timestamp) return;
+    if (state.isPressed == isPressed)
+        return;
+    if (std::max(state.pressTime, state.releaseTime) + MIN_TIME_BETWEEN_STATE_CHANGES > timestamp)
+        return;
 
     state.isPressed = isPressed;
     if (isPressed) {
@@ -29,29 +28,28 @@ void KeyStateController::updateKeyState(const uint8_t keyId, const bool isPresse
         state.releaseTime = timestamp;
     }
 
-    if (localKey) commandController.send<KeyCommand>(isPressed, keyId);
+    if (localKey)
+        commandController.send<KeyCommand>(isPressed, keyId);
 
     for (auto [priority, position] : removeQueue) {
         listeners[static_cast<int>(priority)].erase(position);
     }
     removeQueue.clear();
     for (int i = 0; i < static_cast<int>(ListenerPriority::Count); ++i) {
-        for (IKeyStateListener* listener : listeners[i]) {
+        for (IKeyStateListener *listener : listeners[i]) {
             listener->onKeyStateChange(keyId, state, timestamp);
         }
     }
 }
 
-KeyState& KeyStateController::getKeyState(const uint8_t keyId) {
-    return keyStates[keyId];
-}
+KeyState &KeyStateController::getKeyState(const uint8_t keyId) { return keyStates[keyId]; }
 
-KeyStateListenerReference KeyStateController::addKeyStateListener(IKeyStateListener* listener) {
+KeyStateListenerReference KeyStateController::addKeyStateListener(IKeyStateListener *listener) {
     ListenerPriority priority = listener->getPriority();
     listeners[static_cast<int>(priority)].push_back(listener);
     return std::make_pair(priority, --listeners[static_cast<int>(priority)].end());
 }
 
-void KeyStateController::removeKeyStateListener(const KeyStateListenerReference& listenerReference) {
+void KeyStateController::removeKeyStateListener(const KeyStateListenerReference &listenerReference) {
     removeQueue.push_back(listenerReference);
 }

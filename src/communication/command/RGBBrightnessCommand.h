@@ -12,7 +12,7 @@ public:
 
     explicit RGBBrightnessCommand(float brightness, bool absolute = true);
 
-    explicit RGBBrightnessCommand(InterDeviceCommunicator& communicator);
+    explicit RGBBrightnessCommand(InterDeviceCommunicator &communicator);
 
-    void send(InterDeviceCommunicator& communicator) override;
+    void send(InterDeviceCommunicator &communicator) override;
 };

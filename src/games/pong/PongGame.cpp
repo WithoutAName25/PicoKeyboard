@@ -9,23 +9,24 @@
 #define PADDLE_MAX_POS (display->getHeight() - PADDLE_HALF_SIZE - 1)
 #define BALL_RADIUS 2
 
-void PongGame::drawState(const State& state, const uint16_t color) const {
+void PongGame::drawState(const State &state, const uint16_t color) const {
     display->fillRect(PADDLE_OFFSET, state.posLeft - PADDLE_HALF_SIZE, PADDLE_OFFSET + PADDLE_WIDTH - 1,
                       state.posLeft + PADDLE_HALF_SIZE, color);
     display->fillRect(display->getWidth() - PADDLE_OFFSET - PADDLE_WIDTH, state.posRight - PADDLE_HALF_SIZE,
-                      display->getWidth() - PADDLE_OFFSET - 1,
-                      state.posRight + PADDLE_HALF_SIZE, color);
+                      display->getWidth() - PADDLE_OFFSET - 1, state.posRight + PADDLE_HALF_SIZE, color);
     display->fillRect(state.ballPos.x - BALL_RADIUS, state.ballPos.y - BALL_RADIUS, state.ballPos.x + BALL_RADIUS,
                       state.ballPos.y + BALL_RADIUS, color);
 }
 
-void PongGame::updatePosition(const RotaryEncoder* enc, int32_t& lastRotation, int& pos) const {
+void PongGame::updatePosition(const RotaryEncoder *enc, int32_t &lastRotation, int &pos) const {
     const int32_t rotation = enc->getRotation();
     const int32_t rotationDiff = rotation - lastRotation;
     pos += PADDLE_SPEED * rotationDiff;
     lastRotation = rotation;
-    if (pos < PADDLE_MIN_POS) pos = PADDLE_MIN_POS;
-    else if (pos > PADDLE_MAX_POS) pos = PADDLE_MAX_POS;
+    if (pos < PADDLE_MIN_POS)
+        pos = PADDLE_MIN_POS;
+    else if (pos > PADDLE_MAX_POS)
+        pos = PADDLE_MAX_POS;
 }
 
 void PongGame::updateBall() {
@@ -39,14 +40,13 @@ void PongGame::updateBall() {
 
     // reflect on paddles
     if (oldState.ballPos.x - BALL_RADIUS > PADDLE_OFFSET + PADDLE_WIDTH &&
-        currentState.ballPos.x - BALL_RADIUS <= PADDLE_OFFSET + PADDLE_WIDTH &&
-        currentState.ballPos.y + BALL_RADIUS >= currentState.posLeft - PADDLE_HALF_SIZE &&
-        currentState.ballPos.y - BALL_RADIUS <= currentState.posLeft + PADDLE_HALF_SIZE
-        ||
+            currentState.ballPos.x - BALL_RADIUS <= PADDLE_OFFSET + PADDLE_WIDTH &&
+            currentState.ballPos.y + BALL_RADIUS >= currentState.posLeft - PADDLE_HALF_SIZE &&
+            currentState.ballPos.y - BALL_RADIUS <= currentState.posLeft + PADDLE_HALF_SIZE ||
         oldState.ballPos.x + BALL_RADIUS < display->getWidth() - PADDLE_OFFSET - PADDLE_WIDTH - 1 &&
-        currentState.ballPos.x + BALL_RADIUS >= display->getWidth() - PADDLE_OFFSET - PADDLE_WIDTH - 1 &&
-        currentState.ballPos.y + BALL_RADIUS >= currentState.posRight - PADDLE_HALF_SIZE &&
-        currentState.ballPos.y - BALL_RADIUS <= currentState.posRight + PADDLE_HALF_SIZE) {
+            currentState.ballPos.x + BALL_RADIUS >= display->getWidth() - PADDLE_OFFSET - PADDLE_WIDTH - 1 &&
+            currentState.ballPos.y + BALL_RADIUS >= currentState.posRight - PADDLE_HALF_SIZE &&
+            currentState.ballPos.y - BALL_RADIUS <= currentState.posRight + PADDLE_HALF_SIZE) {
         currentState.ballSpeed.x = -currentState.ballSpeed.x;
     }
 
@@ -57,7 +57,7 @@ void PongGame::updateBall() {
     }
 }
 
-PongGame::PongGame(RotaryEncoder* left, RotaryEncoder* right, LCDGraphics* display)
+PongGame::PongGame(RotaryEncoder *left, RotaryEncoder *right, LCDGraphics *display)
     : left(left), right(right), display(display) {}
 
 void PongGame::update() {
@@ -66,7 +66,6 @@ void PongGame::update() {
     updatePosition(right, rotationRight, currentState.posRight);
     updateBall();
 }
-
 
 void PongGame::draw() const {
     drawState(oldState, 0x0000);
@@ -79,11 +78,7 @@ void PongGame::reset() {
     const uint16_t halfHeight = display->getHeight() >> 1;
     const uint16_t halfWidth = display->getWidth() >> 1;
     const State state = {
-        .posLeft = halfHeight,
-        .posRight = halfHeight,
-        .ballPos = {halfWidth, halfHeight},
-        .ballSpeed = {1, 1}
-    };
+        .posLeft = halfHeight, .posRight = halfHeight, .ballPos = {halfWidth, halfHeight}, .ballSpeed = {1, 1}};
     currentState = state;
     oldState = state;
 }

@@ -12,7 +12,7 @@ public:
     explicit KeyLayer(uint8_t numKeys);
     virtual ~KeyLayer() = default;
 
-    [[nodiscard]] virtual IKeyAction* getAction(uint8_t keyId) const = 0;
+    [[nodiscard]] virtual IKeyAction *getAction(uint8_t keyId) const = 0;
 
     virtual void enable() = 0;
     virtual void disable() = 0;

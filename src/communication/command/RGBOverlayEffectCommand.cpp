@@ -10,13 +10,13 @@ void RGBOverlayEffectCommand::execute(absolute_time_t timestamp) {
     }
 }
 
-RGBOverlayEffectCommand::RGBOverlayEffectCommand(const std::shared_ptr<IRGBEffect>& effect)
+RGBOverlayEffectCommand::RGBOverlayEffectCommand(const std::shared_ptr<IRGBEffect> &effect)
     : effect(effect), indexToRemove(0) {}
 
 RGBOverlayEffectCommand::RGBOverlayEffectCommand(const uint16_t indexToRemove)
     : effect(nullptr), indexToRemove(indexToRemove) {}
 
-RGBOverlayEffectCommand::RGBOverlayEffectCommand(InterDeviceCommunicator& communicator) {
+RGBOverlayEffectCommand::RGBOverlayEffectCommand(InterDeviceCommunicator &communicator) {
     effect = nullptr;
     indexToRemove = 0;
 
@@ -27,7 +27,7 @@ RGBOverlayEffectCommand::RGBOverlayEffectCommand(InterDeviceCommunicator& commun
     }
 }
 
-void RGBOverlayEffectCommand::send(InterDeviceCommunicator& communicator) {
+void RGBOverlayEffectCommand::send(InterDeviceCommunicator &communicator) {
     if (effect != nullptr) {
         communicator.send((ID << 1) & 0xFF | 1);
         effect->serialize(communicator);
