@@ -180,11 +180,17 @@ Color Color::interpolateHSV(const Color &from, const Color &to, float t) {
     const float v1 = from.value();
     const float v2 = to.value();
 
-    if (v1 == 0) {
+    if (s1 <= 0.01) {
+        h1 = h2;
+    }
+    if (v1 <= 0.01) {
         h1 = h2;
         s1 = s2;
     }
-    if (v2 == 0) {
+    if (s2 <= 0.01) {
+        h2 = h1;
+    }
+    if (v2 <= 0.01) {
         h2 = h1;
         s2 = s1;
     }
